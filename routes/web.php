@@ -52,6 +52,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('driver')->name('driver.')->group(function () {
         Route::get('/rides/available', [DriverRideController::class, 'available'])->name('rides.available');
+        Route::get('/rides/poll-available', [DriverRideController::class, 'pollAvailable'])->name('rides.poll-available');
         Route::get('/rides/my', [DriverRideController::class, 'myRides'])->name('rides.my');
         Route::get('/rides/{ride}', [DriverRideController::class, 'show'])->name('rides.show');
         Route::post('/rides/{ride}/accept', [DriverRideController::class, 'accept'])->name('rides.accept');

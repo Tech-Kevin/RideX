@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Driver\UpdateRideStatusRequest;
 use App\Models\Ride;
 use App\Services\RideService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -28,6 +29,20 @@ class DriverRideController extends Controller
             ->get();
 
         return view('driver.rides.available', compact('rides'));
+    }
+
+    public function pollAvailable(): JsonResponse
+    {
+        $this->ensureDriver();
+
+        $rides = Ride::with('customer')
+            ->where('status', RideStatus::PENDING)
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'rides' => $rides
+        ]);
     }
 
     public function myRides(): View
