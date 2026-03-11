@@ -105,7 +105,7 @@ class CustomerRideController extends Controller
 
         $rideService->updateRideStatus($ride, RideStatus::CANCELLED, Auth::user());
 
-        return redirect()->route('customer.rides.show', $ride)
+        return redirect()->route('dashboard')
             ->with('success', 'Ride has been cancelled successfully.');
     }
 }

@@ -68,7 +68,7 @@ if (!function_exists('calculateDistance')) {
 }
 
 if (!function_exists('calculateFare')) {
-    function calculateFare(float $distanceKm, float $baseFare = 30, float $ratePerKm = 12): float
+    function calculateFare(float $distanceKm, float $baseFare = 30, float $ratePerKm = 9): float
     {
         return round($baseFare + ($distanceKm * $ratePerKm), 2);
     }

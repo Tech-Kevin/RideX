@@ -41,11 +41,16 @@
                     <div class="space-y-4 mb-auto">
                         <div class="relative group">
                             <label class="block text-[11px] font-black text-emerald-600 uppercase tracking-widest mb-2 pl-3">Pickup Address</label>
-                            <div class="absolute inset-y-0 left-0 top-[28px] pl-3 flex flex-col items-center pointer-events-none relative z-10">
-                                <div class="w-3 h-3 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)] border-2 border-white"></div>
-                            </div>
                             <input name="pickup_address" id="pickup_address" required readonly placeholder="Tap map exactly twice..."
-                                   class="block w-full pl-10 pr-4 py-3.5 bg-neutral-50 border-2 border-neutral-100 rounded-2xl text-neutral-900 placeholder-neutral-400 focus:outline-none focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-400/10 transition-all font-semibold text-sm cursor-pointer shadow-sm">
+                                   class="block w-full px-4 py-3.5 bg-neutral-50 border-2 border-neutral-100 rounded-2xl text-neutral-900 placeholder-neutral-400 focus:outline-none focus:bg-white focus:border-emerald-400 focus:ring-4 focus:ring-emerald-400/10 transition-all font-semibold text-sm cursor-pointer shadow-sm pr-12">
+                            
+                            <!-- Current Location Button -->
+                            <button type="button" id="use-current-location" class="absolute right-2 top-[30px] w-9 h-9 flex items-center justify-center bg-white border border-neutral-200 rounded-xl text-neutral-500 hover:text-emerald-600 hover:border-emerald-200 hover:bg-emerald-50 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-emerald-400/20" title="Use My Current Location">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </button>
                         </div>
 
                         <!-- Hidden Map Coordinates -->
@@ -58,11 +63,8 @@
                             <div class="absolute -top-6 left-4 w-0.5 h-6 bg-neutral-200"></div>
 
                             <label class="block text-[11px] font-black text-amber-500 uppercase tracking-widest mb-2 pl-3">Drop-off Address</label>
-                            <div class="absolute inset-y-0 left-0 top-[28px] pl-3 flex items-center pointer-events-none z-10 relative">
-                                <div class="w-3 h-3 rounded-none bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)] border-2 border-white transform rotate-45"></div>
-                            </div>
                             <input name="drop_address" id="drop_address" required readonly placeholder="Tap map exactly twice..."
-                                   class="block w-full pl-10 pr-4 py-3.5 bg-neutral-50 border-2 border-neutral-100 rounded-2xl text-neutral-900 placeholder-neutral-400 focus:outline-none focus:bg-white focus:border-amber-400 focus:ring-4 focus:ring-amber-400/10 transition-all font-semibold text-sm cursor-pointer shadow-sm">
+                                   class="block w-full px-4 py-3.5 bg-neutral-50 border-2 border-neutral-100 rounded-2xl text-neutral-900 placeholder-neutral-400 focus:outline-none focus:bg-white focus:border-amber-400 focus:ring-4 focus:ring-amber-400/10 transition-all font-semibold text-sm cursor-pointer shadow-sm">
                         </div>
 
                         <div class="hidden">
@@ -165,16 +167,35 @@
 
     function calculateFare(distance) {
         const base = 30;
-        const rate = 12;
+        const rate = 9;
         return base + (distance * rate);
     }
 
     async function reverseGeocode(lat, lng) {
-        let url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+        let url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1`;
         try {
             let res = await fetch(url);
             let data = await res.json();
-            return data.display_name;
+            
+            if (data && data.address) {
+                const addr = data.address;
+                // Try to build a more localized, human-friendly name
+                const primary = addr.road || addr.neighbourhood || addr.suburb || addr.residential || addr.city_district || addr.village;
+                const secondary = addr.city || addr.town || addr.county || addr.state_district;
+                
+                if (primary && secondary && primary !== secondary) {
+                    return `${primary}, ${secondary}`;
+                } else if (primary) {
+                    return primary;
+                }
+            }
+            
+            // Fallback to the display name if specific parts aren't found, but split it to keep it short
+            if (data && data.display_name) {
+                return data.display_name.split(',').slice(0, 2).join(', ');
+            }
+            
+            return `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
         } catch(e) {
             return `Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`;
         }
@@ -269,6 +290,60 @@
                 btn.innerHTML = `Confirm Ride (Estimate) <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`;
             });
     }
+
+    function setPickupLocation(lat, lng) {
+        if (pickup) {
+            // Already set, could clear or ignore. For safety, let's reset map if they force it
+            resetMap();
+        }
+
+        pickup = {lat, lng};
+        L.marker([lat, lng], {icon: pickupIcon}).addTo(map);
+        map.setView([lat, lng], 16);
+        
+        document.getElementById("pickup_lat").value = lat;
+        document.getElementById("pickup_lng").value = lng;
+        document.getElementById("pickup_address").value = "Loading location...";
+        
+        reverseGeocode(lat, lng).then(addr => {
+            document.getElementById("pickup_address").value = addr;
+        });
+        
+        resetBtn.classList.remove('hidden');
+    }
+
+    document.getElementById('use-current-location').addEventListener('click', function() {
+        if (!("geolocation" in navigator)) {
+            alert("Geolocation is not supported by your browser.");
+            return;
+        }
+
+        const btn = this;
+        const originalHtml = btn.innerHTML;
+        
+        // Setup spinner icon
+        btn.innerHTML = `<svg class="animate-spin h-5 w-5 text-emerald-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+        btn.disabled = true;
+
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                setPickupLocation(position.coords.latitude, position.coords.longitude);
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            },
+            function(error) {
+                console.error("Geolocation error:", error);
+                alert("Unable to fetch your location. Please check your browser permissions.");
+                btn.innerHTML = originalHtml;
+                btn.disabled = false;
+            },
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 0
+            }
+        );
+    });
 
     map.on("click", function (e) {
         let lat = e.latlng.lat;
