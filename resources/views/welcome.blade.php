@@ -98,56 +98,224 @@
 </div>
 
 <!-- Reviews -->
-<div class="bg-white py-24 sm:py-32" id="reviews">
-    <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <h2 class="text-center text-4xl font-black font-heading text-neutral-900 tracking-tight sm:text-5xl mb-16">What our riders say</h2>
+<div class="bg-white py-24 sm:py-32 overflow-hidden flex flex-col items-center" id="reviews">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8 mb-16 text-center">
+        <h2 class="text-4xl lg:text-5xl font-black font-heading text-neutral-900 tracking-tight">What our riders say</h2>
+        <p class="text-neutral-500 font-medium mt-4 max-w-2xl mx-auto text-lg">Don't just take our word for it—hear from the thousands of people who use Taxi-At-Foot every day.</p>
+    </div>
+    
+    <div class="relative flex overflow-x-hidden w-full group py-4">
+        <!-- Overlay gradients for smooth fade out -->
+        <div class="absolute top-0 left-0 h-full w-16 sm:w-48 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
+        <div class="absolute top-0 right-0 h-full w-16 sm:w-48 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
         
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Review Card -->
-            <div class="bg-neutral-50 p-8 rounded-3xl border border-neutral-200 shadow-sm relative hover:-translate-y-1 transition-transform">
-                <div class="flex items-center gap-1 mb-6 text-amber-500">
-                    @for($i=0; $i<5; $i++)
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                    @endfor
+        <div class="flex animate-scroll gap-6 sm:gap-8 px-4">
+            <!-- Original Set -->
+            <div class="flex gap-6 sm:gap-8 min-w-max">
+                <!-- Review 1 -->
+                <div class="bg-neutral-50 p-8 sm:p-10 rounded-[2.5rem] border border-neutral-100 shadow-sm relative hover:-translate-y-2 hover:shadow-xl hover:border-neutral-200 transition-all duration-300 w-[320px] aspect-square sm:w-[360px] flex flex-col text-left">
+                    <div class="flex items-center gap-1 mb-6 text-amber-500">
+                        @for($i=0; $i<5; $i++)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        @endfor
+                    </div>
+                    <p class="text-neutral-700 font-medium mb-8 leading-relaxed whitespace-normal flex-grow">"Absolutely the best taxi service in town. The drivers are always punctual and the cars are spotless. Highly recommend!"</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 bg-rose-500 text-white flex items-center justify-center rounded-full font-bold text-lg shrink-0">S</div>
+                        <div>
+                            <p class="font-bold text-neutral-900">Sarah M.</p>
+                            <p class="text-sm text-neutral-500 font-medium">Daily Commuter</p>
+                        </div>
+                    </div>
                 </div>
-                <p class="text-neutral-700 font-medium mb-8 leading-relaxed">"Absolutely the best taxi service in town. The drivers are always punctual and the cars are spotless. Highly recommend!"</p>
-                <div class="flex items-center gap-4 mt-auto">
-                    <div class="w-12 h-12 bg-rose-500 text-white flex items-center justify-center rounded-full font-bold text-lg">S</div>
-                    <div>
-                        <p class="font-bold text-neutral-900">Sarah M.</p>
-                        <p class="text-sm text-neutral-500 font-medium">Daily Commuter</p>
+
+                <!-- Review 2 -->
+                <div class="bg-neutral-50 p-8 sm:p-10 rounded-[2.5rem] border border-neutral-100 shadow-sm relative hover:-translate-y-2 hover:shadow-xl hover:border-neutral-200 transition-all duration-300 w-[320px] aspect-square sm:w-[360px] flex flex-col text-left">
+                    <div class="flex items-center gap-1 mb-6 text-amber-500">
+                        @for($i=0; $i<5; $i++)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        @endfor
+                    </div>
+                    <p class="text-neutral-700 font-medium mb-8 leading-relaxed whitespace-normal flex-grow">"As a driver, the app is incredibly intuitive. I know exactly where I am going, and the payout estimates are spot on."</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 bg-indigo-500 text-white flex items-center justify-center rounded-full font-bold text-lg shrink-0">R</div>
+                        <div>
+                            <p class="font-bold text-neutral-900">Rahul K.</p>
+                            <p class="text-sm text-neutral-500 font-medium">Partner Driver</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 3 -->
+                <div class="bg-neutral-50 p-8 sm:p-10 rounded-[2.5rem] border border-neutral-100 shadow-sm relative hover:-translate-y-2 hover:shadow-xl hover:border-neutral-200 transition-all duration-300 w-[320px] aspect-square sm:w-[360px] flex flex-col text-left">
+                    <div class="flex items-center gap-1 mb-6 text-amber-500">
+                        @for($i=0; $i<5; $i++)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        @endfor
+                    </div>
+                    <p class="text-neutral-700 font-medium mb-8 leading-relaxed whitespace-normal flex-grow">"The pricing is so transparent compared to others. The entire booking journey is just three taps. 10/10."</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 bg-teal-500 text-white flex items-center justify-center rounded-full font-bold text-lg shrink-0">E</div>
+                        <div>
+                            <p class="font-bold text-neutral-900">Emily R.</p>
+                            <p class="text-sm text-neutral-500 font-medium">Tourist</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 4 -->
+                <div class="bg-neutral-50 p-8 sm:p-10 rounded-[2.5rem] border border-neutral-100 shadow-sm relative hover:-translate-y-2 hover:shadow-xl hover:border-neutral-200 transition-all duration-300 w-[320px] aspect-square sm:w-[360px] flex flex-col text-left">
+                    <div class="flex items-center gap-1 mb-6 text-amber-500">
+                        @for($i=0; $i<5; $i++)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        @endfor
+                    </div>
+                    <p class="text-neutral-700 font-medium mb-8 leading-relaxed whitespace-normal flex-grow">"I love the new design and seamless booking. It’s way faster than anything I've used before."</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 bg-amber-500 text-white flex items-center justify-center rounded-full font-bold text-lg shrink-0">J</div>
+                        <div>
+                            <p class="font-bold text-neutral-900">James D.</p>
+                            <p class="text-sm text-neutral-500 font-medium">Business Traveler</p>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Review 5 -->
+                 <div class="bg-neutral-50 p-8 sm:p-10 rounded-[2.5rem] border border-neutral-100 shadow-sm relative hover:-translate-y-2 hover:shadow-xl hover:border-neutral-200 transition-all duration-300 w-[320px] aspect-square sm:w-[360px] flex flex-col text-left">
+                    <div class="flex items-center gap-1 mb-6 text-amber-500">
+                        @for($i=0; $i<5; $i++)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        @endfor
+                    </div>
+                    <p class="text-neutral-700 font-medium mb-8 leading-relaxed whitespace-normal flex-grow">"Top-level safety features! I feel completely secure sharing my live location with friends."</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 bg-purple-500 text-white flex items-center justify-center rounded-full font-bold text-lg shrink-0">P</div>
+                        <div>
+                            <p class="font-bold text-neutral-900">Priya S.</p>
+                            <p class="text-sm text-neutral-500 font-medium">Student</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 6 -->
+                <div class="bg-neutral-50 p-8 sm:p-10 rounded-[2.5rem] border border-neutral-100 shadow-sm relative hover:-translate-y-2 hover:shadow-xl hover:border-neutral-200 transition-all duration-300 w-[320px] aspect-square sm:w-[360px] flex flex-col text-left">
+                    <div class="flex items-center gap-1 mb-6 text-amber-500">
+                        @for($i=0; $i<5; $i++)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        @endfor
+                    </div>
+                    <p class="text-neutral-700 font-medium mb-8 leading-relaxed whitespace-normal flex-grow">"The driver arrived exactly when the app said he would. Outstanding reliability!"</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 bg-emerald-500 text-white flex items-center justify-center rounded-full font-bold text-lg shrink-0">M</div>
+                        <div>
+                            <p class="font-bold text-neutral-900">Michael B.</p>
+                            <p class="text-sm text-neutral-500 font-medium">Frequent Rider</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-neutral-50 p-8 rounded-3xl border border-neutral-200 shadow-sm relative hover:-translate-y-1 transition-transform">
-                <div class="flex items-center gap-1 mb-6 text-amber-500">
-                    @for($i=0; $i<5; $i++)
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                    @endfor
-                </div>
-                <p class="text-neutral-700 font-medium mb-8 leading-relaxed">"As a driver, the app is incredibly intuitive. I know exactly where I am going, and the payout estimates are spot on."</p>
-                <div class="flex items-center gap-4 mt-auto">
-                    <div class="w-12 h-12 bg-indigo-500 text-white flex items-center justify-center rounded-full font-bold text-lg">R</div>
-                    <div>
-                        <p class="font-bold text-neutral-900">Rahul K.</p>
-                        <p class="text-sm text-neutral-500 font-medium">Partner Driver</p>
+            <!-- Duplicated Set for infinite loop -->
+            <div class="flex gap-6 sm:gap-8 min-w-max" aria-hidden="true">
+                <!-- Review 1 -->
+                <div class="bg-neutral-50 p-8 sm:p-10 rounded-[2.5rem] border border-neutral-100 shadow-sm relative hover:-translate-y-2 hover:shadow-xl hover:border-neutral-200 transition-all duration-300 w-[320px] aspect-square sm:w-[360px] flex flex-col text-left">
+                    <div class="flex items-center gap-1 mb-6 text-amber-500">
+                        @for($i=0; $i<5; $i++)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        @endfor
+                    </div>
+                    <p class="text-neutral-700 font-medium mb-8 leading-relaxed whitespace-normal flex-grow">"Absolutely the best taxi service in town. The drivers are always punctual and the cars are spotless. Highly recommend!"</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 bg-rose-500 text-white flex items-center justify-center rounded-full font-bold text-lg shrink-0">S</div>
+                        <div>
+                            <p class="font-bold text-neutral-900">Sarah M.</p>
+                            <p class="text-sm text-neutral-500 font-medium">Daily Commuter</p>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="bg-neutral-50 p-8 rounded-3xl border border-neutral-200 shadow-sm relative hover:-translate-y-1 transition-transform sm:hidden lg:block">
-                <div class="flex items-center gap-1 mb-6 text-amber-500">
-                    @for($i=0; $i<5; $i++)
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
-                    @endfor
+                <!-- Review 2 -->
+                <div class="bg-neutral-50 p-8 sm:p-10 rounded-[2.5rem] border border-neutral-100 shadow-sm relative hover:-translate-y-2 hover:shadow-xl hover:border-neutral-200 transition-all duration-300 w-[320px] aspect-square sm:w-[360px] flex flex-col text-left">
+                    <div class="flex items-center gap-1 mb-6 text-amber-500">
+                        @for($i=0; $i<5; $i++)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        @endfor
+                    </div>
+                    <p class="text-neutral-700 font-medium mb-8 leading-relaxed whitespace-normal flex-grow">"As a driver, the app is incredibly intuitive. I know exactly where I am going, and the payout estimates are spot on."</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 bg-indigo-500 text-white flex items-center justify-center rounded-full font-bold text-lg shrink-0">R</div>
+                        <div>
+                            <p class="font-bold text-neutral-900">Rahul K.</p>
+                            <p class="text-sm text-neutral-500 font-medium">Partner Driver</p>
+                        </div>
+                    </div>
                 </div>
-                <p class="text-neutral-700 font-medium mb-8 leading-relaxed">"The pricing is so transparent compared to others. The entire booking journey is just three taps. 10/10."</p>
-                <div class="flex items-center gap-4 mt-auto">
-                    <div class="w-12 h-12 bg-teal-500 text-white flex items-center justify-center rounded-full font-bold text-lg">E</div>
-                    <div>
-                        <p class="font-bold text-neutral-900">Emily R.</p>
-                        <p class="text-sm text-neutral-500 font-medium">Tourist</p>
+
+                <!-- Review 3 -->
+                <div class="bg-neutral-50 p-8 sm:p-10 rounded-[2.5rem] border border-neutral-100 shadow-sm relative hover:-translate-y-2 hover:shadow-xl hover:border-neutral-200 transition-all duration-300 w-[320px] aspect-square sm:w-[360px] flex flex-col text-left">
+                    <div class="flex items-center gap-1 mb-6 text-amber-500">
+                        @for($i=0; $i<5; $i++)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        @endfor
+                    </div>
+                    <p class="text-neutral-700 font-medium mb-8 leading-relaxed whitespace-normal flex-grow">"The pricing is so transparent compared to others. The entire booking journey is just three taps. 10/10."</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 bg-teal-500 text-white flex items-center justify-center rounded-full font-bold text-lg shrink-0">E</div>
+                        <div>
+                            <p class="font-bold text-neutral-900">Emily R.</p>
+                            <p class="text-sm text-neutral-500 font-medium">Tourist</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 4 -->
+                <div class="bg-neutral-50 p-8 sm:p-10 rounded-[2.5rem] border border-neutral-100 shadow-sm relative hover:-translate-y-2 hover:shadow-xl hover:border-neutral-200 transition-all duration-300 w-[320px] aspect-square sm:w-[360px] flex flex-col text-left">
+                    <div class="flex items-center gap-1 mb-6 text-amber-500">
+                        @for($i=0; $i<5; $i++)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        @endfor
+                    </div>
+                    <p class="text-neutral-700 font-medium mb-8 leading-relaxed whitespace-normal flex-grow">"I love the new design and seamless booking. It’s way faster than anything I've used before."</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 bg-amber-500 text-white flex items-center justify-center rounded-full font-bold text-lg shrink-0">J</div>
+                        <div>
+                            <p class="font-bold text-neutral-900">James D.</p>
+                            <p class="text-sm text-neutral-500 font-medium">Business Traveler</p>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Review 5 -->
+                 <div class="bg-neutral-50 p-8 sm:p-10 rounded-[2.5rem] border border-neutral-100 shadow-sm relative hover:-translate-y-2 hover:shadow-xl hover:border-neutral-200 transition-all duration-300 w-[320px] aspect-square sm:w-[360px] flex flex-col text-left">
+                    <div class="flex items-center gap-1 mb-6 text-amber-500">
+                        @for($i=0; $i<5; $i++)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        @endfor
+                    </div>
+                    <p class="text-neutral-700 font-medium mb-8 leading-relaxed whitespace-normal flex-grow">"Top-level safety features! I feel completely secure sharing my live location with friends."</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 bg-purple-500 text-white flex items-center justify-center rounded-full font-bold text-lg shrink-0">P</div>
+                        <div>
+                            <p class="font-bold text-neutral-900">Priya S.</p>
+                            <p class="text-sm text-neutral-500 font-medium">Student</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Review 6 -->
+                <div class="bg-neutral-50 p-8 rounded-3xl border border-neutral-200 shadow-sm relative hover:-translate-y-1 transition-transform w-[350px] sm:w-[400px] flex flex-col text-left">
+                    <div class="flex items-center gap-1 mb-6 text-amber-500">
+                        @for($i=0; $i<5; $i++)
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" /></svg>
+                        @endfor
+                    </div>
+                    <p class="text-neutral-700 font-medium mb-8 leading-relaxed whitespace-normal flex-grow">"The driver arrived exactly when the app said he would. Outstanding reliability!"</p>
+                    <div class="flex items-center gap-4 mt-auto">
+                        <div class="w-12 h-12 bg-emerald-500 text-white flex items-center justify-center rounded-full font-bold text-lg shrink-0">M</div>
+                        <div>
+                            <p class="font-bold text-neutral-900">Michael B.</p>
+                            <p class="text-sm text-neutral-500 font-medium">Frequent Rider</p>
+                        </div>
                     </div>
                 </div>
             </div>

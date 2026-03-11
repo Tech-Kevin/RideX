@@ -10,7 +10,7 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800|outfit:500,600,700,800" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|space-grotesk:500,600,700" rel="stylesheet" />
 
     <!-- Leaflet/Other Styles -->
     @yield('styles')
@@ -20,13 +20,26 @@
 
     <style>
         body { font-family: 'Inter', sans-serif; }
-        h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Outfit', sans-serif; }
+        h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.03em; }
         
         /* Custom scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f8fafc; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Infinite Marquee Scroll */
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-scroll {
+            animation: scroll 40s linear infinite;
+            width: max-content;
+        }
+        .animate-scroll:hover {
+            animation-play-state: paused;
+        }
     </style>
 </head>
 
