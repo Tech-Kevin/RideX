@@ -114,34 +114,18 @@
 @endsection
 
 @section('scripts')
+@php
+    $hasActiveRide = $rides->whereIn('status', [
+        \App\Enums\RideStatus::ACCEPTED,
+        \App\Enums\RideStatus::DRIVER_ARRIVING,
+        \App\Enums\RideStatus::IN_PROGRESS
+    ])->isNotEmpty();
+@endphp
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Broadcast location updates periodically if there's any active ride
-        @php
-            $hasActiveRide = $rides->whereIn('status', [
-                \App\Enums\RideStatus::ACCEPTED,
-                \App\Enums\RideStatus::DRIVER_ARRIVING,
-                \App\Enums\RideStatus::IN_PROGRESS
-            ])->isNotEmpty();
-        @endphp
-        let activeRidesExist = @json($hasActiveRide);
-        if (activeRidesExist && "geolocation" in navigator) {
-            setInterval(() => {
-                navigator.geolocation.getCurrentPosition((position) => {
-                    const lat = position.coords.latitude;
-                    const lng = position.coords.longitude;
-                    
-                    fetch('{{ route("driver.location.update") }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({ lat: lat, lng: lng })
-                    }).catch(console.error);
-                });
-            }, 10000); // Send every 10 seconds
-        }
-    });
+    window.config = {
+        activeRidesExist: @json($hasActiveRide),
+        locationUpdateRoute: '{{ route("driver.location.update") }}'
+    };
 </script>
+<script src="{{ asset('js/driver/my-rides.js') }}"></script>
 @endsection

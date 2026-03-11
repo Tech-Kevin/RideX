@@ -41,6 +41,11 @@ class AuthController extends Controller
         }
 
         if ($existingUser) {
+            // Check if user is blocked before allowing them to "register" an existing phone number
+            if (!$existingUser->is_active) {
+                return back()->withInput()->with('error', 'Blocked by admin. Contact admin.');
+            }
+
             // Update the shell user that might have been created by sendOtp
             $existingUser->update([
                 'name' => $validated['name'],
@@ -58,6 +63,7 @@ class AuthController extends Controller
                 'password' => Hash::make($validated['password']),
                 'role' => $validated['role'],
                 'is_phone_verified' => true, // Auto verify on register for this prototype flow
+                'is_active' => true,
             ]);
         }
 
@@ -110,6 +116,12 @@ class AuthController extends Controller
 
         try {
             $user = $authService->verifyOtp($phone, $request->validated('otp'));
+
+            if (!$user->is_active) {
+                session()->forget('otp_phone');
+                return redirect()->route('login')->with('error', 'Blocked by admin. Contact admin.');
+            }
+
             Auth::login($user);
 
             session()->forget('otp_phone');

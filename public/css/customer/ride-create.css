@@ -1,0 +1,4 @@
+/* Fix leaflet z-index spilling over the top navbar */
+.leaflet-container {
+    z-index: 1 !important;
+}

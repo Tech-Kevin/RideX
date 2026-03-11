@@ -40,6 +40,14 @@ Route::middleware('auth')->group(function () {
     Route::middleware('verified')->group(function () {
         Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
 
+        // Admin Routes
+        Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
+            Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
+            Route::get('/users', [\App\Http\Controllers\Admin\AdminController::class, 'users'])->name('users');
+            Route::post('/users/{user}/toggle-status', [\App\Http\Controllers\Admin\AdminController::class, 'toggleStatus'])->name('users.toggle-status');
+            Route::get('/rides', [\App\Http\Controllers\Admin\AdminController::class, 'rides'])->name('rides');
+        });
+
         Route::prefix('customer')->name('customer.')->group(function () {
         Route::get('/rides', [CustomerRideController::class, 'index'])->name('rides.index');
         Route::get('/rides/create', [CustomerRideController::class, 'create'])->name('rides.create');

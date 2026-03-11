@@ -4,14 +4,7 @@
 
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <style>
-        .leaflet-container {
-            z-index: 1 !important;
-        }
-        .leaflet-routing-container {
-            display: none !important;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('css/driver/ride-show.css') }}" />
 @endsection
 
 @section('content')
@@ -219,78 +212,14 @@
 @section('scripts')
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', async function () {
-        const map = L.map('map', {zoomControl: false});
-        L.control.zoom({ position: 'bottomright' }).addTo(map);
-
-        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-            maxZoom: 19,
-            attribution: '&copy; OpenStreetMap & CARTO'
-        }).addTo(map);
-
-        const pickupLat = parseFloat("{{ $ride->pickup_lat }}");
-        const pickupLng = parseFloat("{{ $ride->pickup_lng }}");
-        const dropLat = parseFloat("{{ $ride->drop_lat }}");
-        const dropLng = parseFloat("{{ $ride->drop_lng }}");
-
-        const pickupIcon = L.divIcon({
-            className: 'custom-icon',
-            html: `<div class="w-4 h-4 rounded-full bg-emerald-400 border-[3px] border-white shadow-md"></div>`,
-            iconSize: [20, 20],
-            iconAnchor: [10, 10]
-        });
-
-        const dropIcon = L.divIcon({
-            className: 'custom-icon',
-            html: `<div class="w-4 h-4 bg-amber-400 border-[3px] border-white shadow-md transform rotate-45"></div>`,
-            iconSize: [20, 20],
-            iconAnchor: [10, 10]
-        });
-
-        const pMarker = L.marker([pickupLat, pickupLng], {icon: pickupIcon}).addTo(map);
-        const dMarker = L.marker([dropLat, dropLng], {icon: dropIcon}).addTo(map);
-
-        try {
-            const url = `https://router.project-osrm.org/route/v1/driving/${pickupLng},${pickupLat};${dropLng},${dropLat}?overview=full&geometries=geojson`;
-            const res = await fetch(url);
-            const data = await res.json();
-            
-            if (data.routes && data.routes.length > 0) {
-                const routeLine = L.geoJSON(data.routes[0].geometry, {
-                    style: { color: "#171717", weight: 5, opacity: 0.8, lineCap: "round", lineJoin: "round" }
-                }).addTo(map);
-                
-                map.fitBounds(routeLine.getBounds(), { padding: [50, 50] });
-            } else {
-                map.fitBounds(L.latLngBounds([pMarker.getLatLng(), dMarker.getLatLng()]), { padding: [50, 50] });
-            }
-        } catch(e) {
-            console.error("OSRM Routing error", e);
-            map.fitBounds(L.latLngBounds([pMarker.getLatLng(), dMarker.getLatLng()]), { padding: [50, 50] });
-        }
-
-        setTimeout(() => map.invalidateSize(), 300);
-        
-        // Location updating if ride is active
-        @if(in_array($ride->status->value, ['accepted', 'driver_arriving', 'in_progress']))
-            if ("geolocation" in navigator) {
-                setInterval(() => {
-                    navigator.geolocation.getCurrentPosition((position) => {
-                        const lat = position.coords.latitude;
-                        const lng = position.coords.longitude;
-                        
-                        fetch('{{ route("driver.location.update") }}', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                            },
-                            body: JSON.stringify({ lat: lat, lng: lng })
-                        }).catch(console.error);
-                    });
-                }, 10000);
-            }
-        @endif
-    });
+    window.config = {
+        pickupLat: '{{ $ride->pickup_lat }}',
+        pickupLng: '{{ $ride->pickup_lng }}',
+        dropLat: '{{ $ride->drop_lat }}',
+        dropLng: '{{ $ride->drop_lng }}',
+        isActiveRide: {{ in_array($ride->status->value, ['accepted', 'driver_arriving', 'in_progress']) ? 'true' : 'false' }},
+        locationUpdateRoute: '{{ route("driver.location.update") }}'
+    };
 </script>
+<script src="{{ asset('js/driver/ride-show.js') }}"></script>
 @endsection

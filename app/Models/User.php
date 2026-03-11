@@ -24,6 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'role',
         'is_phone_verified',
+        'is_active',
         'current_lat',
         'current_lng',
     ];
@@ -49,6 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_phone_verified' => 'boolean',
+            'is_active' => 'boolean',
             'current_lat' => 'decimal:7',
             'current_lng' => 'decimal:7',
         ];

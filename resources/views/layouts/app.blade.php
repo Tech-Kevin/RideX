@@ -64,6 +64,10 @@
                                 <a href="{{ route('driver.rides.available') }}" class="px-4 py-2 rounded-xl text-emerald-600 font-bold hover:bg-emerald-50 hover:text-emerald-700 transition-colors">Available</a>
                                 <a href="{{ route('driver.rides.my') }}" class="px-4 py-2 rounded-xl text-neutral-600 font-semibold hover:bg-neutral-100 hover:text-neutral-900 transition-colors">My Jobs</a>
                             @endif
+
+                            @if ($user->isAdmin())
+                                <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 rounded-xl text-indigo-600 font-bold hover:bg-indigo-50 hover:text-indigo-700 transition-colors">Admin Panel</a>
+                            @endif
                         </div>
 
                         <!-- User Profile Dropdown / Info -->
@@ -88,6 +92,10 @@
                                 @elseif ($user->isDriver())
                                     <a href="{{ route('driver.rides.available') }}" class="block md:hidden px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 font-medium whitespace-nowrap">Available Rides</a>
                                     <a href="{{ route('driver.rides.my') }}" class="block md:hidden px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 font-medium whitespace-nowrap">My Jobs</a>
+                                @endif
+
+                                @if ($user->isAdmin())
+                                    <a href="{{ route('admin.dashboard') }}" class="block md:hidden px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 font-bold whitespace-nowrap border-t border-neutral-100 mt-2 pt-2">Admin Panel</a>
                                 @endif
                                 
                                 <div class="h-px bg-neutral-100 my-1 md:hidden"></div>
