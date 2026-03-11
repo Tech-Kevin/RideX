@@ -1,0 +1,164 @@
+<?php
+
+namespace App\Services;
+
+use App\Enums\RideStatus;
+use App\Events\RideAccepted;
+use App\Events\RideRequested;
+use App\Events\RideStatusUpdated;
+use App\Jobs\SendSmsJob;
+use App\Models\Ride;
+use App\Models\RideStatusLog;
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+
+class RideService
+{
+    public function createRide(array $data, User $customer): Ride
+    {
+        $distance = calculateDistance(
+            (float) $data['pickup_lat'],
+            (float) $data['pickup_lng'],
+            (float) $data['drop_lat'],
+            (float) $data['drop_lng']
+        );
+
+        $fare = calculateFare($distance);
+
+        $ride = DB::transaction(function () use ($data, $distance, $fare, $customer) {
+            $ride = Ride::create([
+                'customer_id' => $customer->id,
+                'pickup_address' => $data['pickup_address'],
+                'pickup_lat' => $data['pickup_lat'],
+                'pickup_lng' => $data['pickup_lng'],
+                'drop_address' => $data['drop_address'],
+                'drop_lat' => $data['drop_lat'],
+                'drop_lng' => $data['drop_lng'],
+                'distance_km' => $distance,
+                'estimated_fare' => $fare,
+                'status' => RideStatus::PENDING,
+            ]);
+
+            RideStatusLog::create([
+                'ride_id' => $ride->id,
+                'changed_by' => $customer->id,
+                'status' => RideStatus::PENDING->value,
+                'remarks' => 'Ride requested by customer.',
+            ]);
+
+            return $ride;
+        });
+
+        $ride->load('customer');
+
+        SendSmsJob::dispatch(
+            $customer->phone,
+            buildRideBookedMessage($ride->id, (float) $ride->estimated_fare),
+            'ride_booked'
+        );
+
+        $drivers = User::where('role', 'driver')
+            ->where('is_phone_verified', true)
+            ->get();
+
+        foreach ($drivers as $driver) {
+            SendSmsJob::dispatch(
+                $driver->phone,
+                "New ride available. Pickup: {$ride->pickup_address}. Ride ID: {$ride->id}.",
+                'ride_request'
+            );
+        }
+
+        broadcast(new RideRequested($ride));
+
+        return $ride;
+    }
+
+    public function acceptRide(Ride $ride, User $driver): Ride
+    {
+        DB::transaction(function () use ($ride, $driver) {
+            $lockedRide = Ride::where('id', $ride->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            if ($lockedRide->status !== RideStatus::PENDING || $lockedRide->driver_id !== null) {
+                throw new \Exception('This ride was already accepted by another driver.');
+            }
+
+            $lockedRide->update([
+                'driver_id' => $driver->id,
+                'status' => RideStatus::ACCEPTED,
+                'accepted_at' => now(),
+            ]);
+
+            RideStatusLog::create([
+                'ride_id' => $lockedRide->id,
+                'changed_by' => $driver->id,
+                'status' => RideStatus::ACCEPTED->value,
+                'remarks' => 'Ride accepted by driver.',
+            ]);
+        });
+
+        $ride->refresh();
+        $ride->load(['customer', 'driver']);
+
+        SendSmsJob::dispatch(
+            $ride->customer->phone,
+            buildRideStatusMessage($ride->id, RideStatus::ACCEPTED->value),
+            'ride_status'
+        );
+
+        broadcast(new RideAccepted($ride));
+
+        return $ride;
+    }
+
+    public function updateRideStatus(Ride $ride, RideStatus $newStatus, User $driver): Ride
+    {
+        // $ride->status is expected to be cast to the Enum. 
+        if (!canTransitionRideStatus($ride->status->value ?? $ride->status, $newStatus->value)) {
+            throw new \Exception('Invalid status transition.');
+        }
+
+        DB::transaction(function () use ($ride, $newStatus, $driver) {
+            $updateData = [
+                'status' => $newStatus,
+            ];
+
+            if ($newStatus === RideStatus::IN_PROGRESS) {
+                $updateData['started_at'] = now();
+            }
+
+            if ($newStatus === RideStatus::COMPLETED) {
+                $updateData['completed_at'] = now();
+                $updateData['final_fare'] = $ride->estimated_fare;
+            }
+
+            if ($newStatus === RideStatus::CANCELLED) {
+                $updateData['cancelled_at'] = now();
+            }
+
+            $ride->update($updateData);
+
+            RideStatusLog::create([
+                'ride_id' => $ride->id,
+                'changed_by' => $driver->id,
+                'status' => $newStatus->value,
+                'remarks' => 'Ride status updated by driver.',
+            ]);
+        });
+
+        $ride->refresh();
+        $ride->load('customer');
+
+        SendSmsJob::dispatch(
+            $ride->customer->phone,
+            buildRideStatusMessage($ride->id, $newStatus->value),
+            'ride_status'
+        );
+
+        broadcast(new RideStatusUpdated($ride));
+
+        return $ride;
+    }
+}
