@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Ride Oversight - RideX Admin')
+@section('breadcrumb', 'Ride History')
 
 @section('admin-content')
 <div class="px-6 py-8 md:py-12 w-full">

@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('title', 'Admin Dashboard - RideX')
+@section('breadcrumb', 'Dashboard')
 
 @section('admin-content')
 <div class="px-6 py-8 md:py-12 w-full">
@@ -44,17 +45,21 @@
             <p class="text-[11px] font-black text-neutral-400 uppercase tracking-[0.2em]">Gross Revenue</p>
         </div>
 
-        <!-- Comments/Verifications -->
-        <div class="bg-white rounded-[2.5rem] p-10 border border-neutral-100 shadow-xl shadow-neutral-900/[0.02] flex flex-col items-center group hover:scale-105 transition-all duration-500">
+        <!-- Verifications Pending -->
+        @php $pendingVerifications = \App\Models\User::where('verification_status', 'pending')->count(); @endphp
+        <a href="{{ route('admin.verifications') }}" class="bg-white rounded-[2.5rem] p-10 border border-neutral-100 shadow-xl shadow-neutral-900/[0.02] flex flex-col items-center group hover:scale-105 transition-all duration-500 relative overflow-hidden">
+            @if($pendingVerifications > 0)
+                <span class="absolute top-5 right-5 bg-rose-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-widest">Action Req.</span>
+            @endif
             <div class="w-20 h-20 rounded-[1.8rem] bg-rose-50 text-rose-500 flex items-center justify-center mb-6 group-hover:bg-rose-500 group-hover:text-white transition-colors duration-500 shadow-inner">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
             </div>
-            <h3 class="text-4xl font-black font-heading text-neutral-900 tracking-tighter mb-1">Queue</h3>
-            <p class="text-[11px] font-black text-neutral-400 uppercase tracking-[0.2em]">Verifications</p>
-        </div>
+            <h3 class="text-4xl font-black font-heading text-neutral-900 tracking-tighter mb-1">{{ $pendingVerifications }}</h3>
+            <p class="text-[11px] font-black text-neutral-400 uppercase tracking-[0.2em]">Pending Verifications</p>
+        </a>
     </div>
 
-<div x-data="{ selectedVehicle: 'none' }" x-cloak>
+<div x-data="{ selectedVehicle: 'none' }">
     <!-- Color Cards (Vehicle Type Metrics) -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
         <!-- Bike Card -->
@@ -86,7 +91,11 @@
             <div class="flex items-center gap-6 relative z-10 text-left">
                 <div class="w-16 h-16 rounded-[1.2rem] bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/10 shadow-xl"
                      :class="selectedVehicle === 'auto' ? 'bg-white/20' : ''">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" /></svg>
+                    <!-- Auto / Rickshaw icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zm10 0a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 17V9a4 4 0 014-4h6l4 4v8M3 13h14"/>
+                    </svg>
                 </div>
                 <div>
                     <h4 class="text-3xl font-black font-heading tracking-tighter" :class="selectedVehicle === 'auto' ? 'text-neutral-900' : 'text-white'" style="color: black;">AUTO</h4>
@@ -107,7 +116,13 @@
             <div class="flex items-center gap-6 relative z-10 text-left">
                 <div class="w-16 h-16 rounded-[1.2rem] bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/10 shadow-xl"
                      :class="selectedVehicle === 'car' ? 'bg-white/20' : ''">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
+                    <!-- Car icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 17H3a2 2 0 01-2-2V9l2-4h14l2 4v6a2 2 0 01-2 2h-2"/>
+                        <circle cx="7.5" cy="17.5" r="2.5" stroke-width="2.5"/>
+                        <circle cx="16.5" cy="17.5" r="2.5" stroke-width="2.5"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9h18"/>
+                    </svg>
                 </div>
                 <div>
                     <h4 class="text-3xl font-black font-heading tracking-tighter" :class="selectedVehicle === 'car' ? 'text-neutral-900' : 'text-white'" style="color: black;">CAR</h4>

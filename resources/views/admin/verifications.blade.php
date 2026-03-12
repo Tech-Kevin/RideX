@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
-@section('title', 'Pending Verifications - Admin')
+@section('title', 'Verifications - RideX Admin')
+@section('breadcrumb', 'Verifications')
 
 @section('admin-content')
 <div class="px-6 py-8 md:py-12 w-full">
