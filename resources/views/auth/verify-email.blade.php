@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Verify Email - Taxi-At-Foot')
+@section('title', 'Verify Email - RideX')
 
 @section('content')
 <div class="min-h-[80vh] flex flex-col justify-center py-12 px-6 lg:px-8 relative overflow-hidden bg-slate-50">

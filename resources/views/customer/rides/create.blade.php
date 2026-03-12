@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Book a Ride - Taxi-At-Foot')
+@section('title', 'Book a Ride - RideX')
 
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'User Management - Taxi-At-Foot Admin')
+@section('title', 'User Management - RideX Admin')
 
 @section('admin-content')
 <div class="px-6 py-8 md:py-12 w-full">

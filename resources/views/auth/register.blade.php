@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Register - Taxi-At-Foot')
+@section('title', 'Register - RideX')
 
 @section('content')
 <div class="min-h-[80vh] flex flex-col justify-center py-12 px-6 lg:px-8 relative overflow-hidden bg-slate-50">
@@ -20,7 +20,7 @@
             Create an account
         </h2>
         <p class="mt-2 text-center text-sm text-neutral-500 font-medium">
-            Join Taxi-At-Foot and start riding today
+            Join RideX and start riding today
         </p>
     </div>
 

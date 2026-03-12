@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Taxi-At-Foot - The Fastest Way to Move')
+@section('title', 'RideX - The Fastest Way to Move')
 
 @section('content')
 <!-- Hero Section -->
@@ -102,7 +102,7 @@
     <div class="mx-auto max-w-7xl px-6 lg:px-8 mb-16 text-center">
         <h2 class="text-xl font-bold text-amber-600 tracking-wider uppercase mb-2">Wall of Love</h2>
         <p class="text-4xl lg:text-5xl font-black font-heading text-neutral-900 tracking-tight">What our riders say</p>
-        <p class="text-neutral-500 font-medium mt-4 max-w-2xl mx-auto text-lg leading-relaxed">Don't just take our word for it—hear from the thousands of people who use Taxi-At-Foot every day.</p>
+        <p class="text-neutral-500 font-medium mt-4 max-w-2xl mx-auto text-lg leading-relaxed">Don't just take our word for it—hear from the thousands of people who use RideX every day.</p>
     </div>
     
     <div class="w-full flex flex-col gap-6 sm:gap-8">

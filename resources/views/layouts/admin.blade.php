@@ -118,7 +118,7 @@
                             <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
                         </svg>
                     </div>
-                    <span class="text-xl font-black font-heading text-white tracking-tight hidden sm:block">Taxi-At-Foot <span class="text-amber-400 text-xs align-top ml-0.5 font-bold uppercase tracking-widest">Admin</span></span>
+                    <span class="text-xl font-black font-heading text-white tracking-tight hidden sm:block">RideX <span class="text-amber-400 text-xs align-top ml-0.5 font-bold uppercase tracking-widest">Admin</span></span>
                 </div>
             </div>
 

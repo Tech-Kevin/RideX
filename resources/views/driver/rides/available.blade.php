@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Available Rides - Taxi-At-Foot')
+@section('title', 'Available Rides - RideX')
 
 @section('content')
 <div class="max-w-6xl mx-auto px-6 py-8 md:py-12 w-full">

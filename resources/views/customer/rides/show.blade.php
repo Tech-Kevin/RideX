@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Ride Details #' . $ride->id . ' - Taxi-At-Foot')
+@section('title', 'Ride Details #' . $ride->id . ' - RideX')
 
 @section('styles')
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />

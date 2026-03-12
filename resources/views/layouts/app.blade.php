@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', config('app.name', 'Taxi-At-Foot'))</title>
+    <title>@yield('title', config('app.name', 'RideX'))</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -93,7 +93,7 @@
                                 <path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" />
                             </svg>
                         </div>
-                        <span class="text-xl sm:text-2xl font-black font-heading tracking-tight text-neutral-900">Taxi-At-Foot</span>
+                        <span class="text-xl sm:text-2xl font-black font-heading tracking-tight text-neutral-900">RideX</span>
                     </a>
                 </div>
 
@@ -198,11 +198,11 @@
                 <div class="w-8 h-8 bg-amber-400 rounded-lg flex items-center justify-center transform rotate-3">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-neutral-900" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clip-rule="evenodd" /></svg>
                 </div>
-                <span class="text-xl font-bold font-heading tracking-tight text-neutral-900">Taxi-At-Foot</span>
+                <span class="text-xl font-bold font-heading tracking-tight text-neutral-900">RideX</span>
             </div>
             
             <p class="text-center text-neutral-500 font-medium text-sm">
-                &copy; {{ date('Y') }} Taxi-At-Foot, Inc. All rights reserved.
+                &copy; {{ date('Y') }} RideX, Inc. All rights reserved.
             </p>
             <div class="flex gap-4 mt-6">
                 <a href="#" class="text-neutral-400 hover:text-neutral-900 transition-colors">Privacy Policy</a>
