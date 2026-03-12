@@ -23,11 +23,12 @@ class RideService
             (float) $data['drop_lng']
         );
 
-        $fare = calculateFare($distance);
+        $fare = calculateFare($distance, $data['vehicle_type']);
 
         $ride = DB::transaction(function () use ($data, $distance, $fare, $customer) {
             $ride = Ride::create([
                 'customer_id' => $customer->id,
+                'vehicle_type' => $data['vehicle_type'],
                 'pickup_address' => $data['pickup_address'],
                 'pickup_lat' => $data['pickup_lat'],
                 'pickup_lng' => $data['pickup_lng'],
@@ -59,6 +60,7 @@ class RideService
 
         $drivers = User::where('role', 'driver')
             ->where('is_phone_verified', true)
+            ->where('vehicle_type', $ride->vehicle_type)
             ->get();
 
         foreach ($drivers as $driver) {
@@ -83,6 +85,10 @@ class RideService
 
             if ($lockedRide->status !== RideStatus::PENDING || $lockedRide->driver_id !== null) {
                 throw new \Exception('This ride was already accepted by another driver.');
+            }
+
+            if ($lockedRide->vehicle_type !== $driver->vehicle_type) {
+                throw new \Exception("Your vehicle type ({$driver->vehicle_type->label()}) does not match this ride's requirement ({$lockedRide->vehicle_type->label()}).");
             }
 
             $lockedRide->update([

@@ -21,6 +21,7 @@ class StoreRideRequest extends FormRequest
             'drop_address' => ['required', 'string', 'max:255'],
             'drop_lat' => ['required', 'numeric'],
             'drop_lng' => ['required', 'numeric'],
+            'vehicle_type' => ['required', 'string', \Illuminate\Validation\Rule::enum(\App\Enums\VehicleType::class)],
         ];
     }
 }

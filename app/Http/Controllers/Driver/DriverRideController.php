@@ -16,7 +16,16 @@ class DriverRideController extends Controller
 {
     private function ensureDriver(): void
     {
-        abort_unless(Auth::check() && Auth::user()->isDriver(), 403);
+        $user = Auth::user();
+        abort_unless($user && $user->isDriver(), 403);
+        
+        if ($user->verification_status !== 'approved') {
+            $msg = $user->verification_status === 'rejected' 
+                ? 'Your account has been rejected by admin. Please check your profile.' 
+                : 'Your account is pending verification. You will be able to accept rides once approved.';
+            
+            abort(403, $msg);
+        }
     }
 
     public function available(): View
@@ -25,6 +34,7 @@ class DriverRideController extends Controller
 
         $rides = Ride::with('customer')
             ->where('status', RideStatus::PENDING)
+            ->where('vehicle_type', Auth::user()->vehicle_type)
             ->latest()
             ->get();
 
@@ -37,6 +47,7 @@ class DriverRideController extends Controller
 
         $rides = Ride::with('customer')
             ->where('status', RideStatus::PENDING)
+            ->where('vehicle_type', Auth::user()->vehicle_type)
             ->latest()
             ->get();
 

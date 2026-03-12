@@ -68,8 +68,17 @@ if (!function_exists('calculateDistance')) {
 }
 
 if (!function_exists('calculateFare')) {
-    function calculateFare(float $distanceKm, float $baseFare = 30, float $ratePerKm = 9): float
+    function calculateFare(float $distanceKm, string|\App\Enums\VehicleType $vehicleType = \App\Enums\VehicleType::BIKE): float
     {
+        if ($vehicleType instanceof \App\Enums\VehicleType) {
+            $vehicleType = $vehicleType->value;
+        }
+
+        $rate = \App\Models\VehicleRate::where('vehicle_type', $vehicleType)->first();
+        
+        $baseFare = $rate ? (float) $rate->base_fare : 30;
+        $ratePerKm = $rate ? (float) $rate->rate_per_km : 9;
+
         return round($baseFare + ($distanceKm * $ratePerKm), 2);
     }
 }

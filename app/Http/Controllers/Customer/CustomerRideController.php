@@ -31,7 +31,9 @@ class CustomerRideController extends Controller
     {
         $this->ensureCustomer();
 
-        return view('customer.rides.create');
+        $rates = \App\Models\VehicleRate::all()->keyBy('vehicle_type');
+
+        return view('customer.rides.create', compact('rates'));
     }
 
     public function store(StoreRideRequest $request, RideService $rideService): RedirectResponse

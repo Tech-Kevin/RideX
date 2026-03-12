@@ -46,6 +46,12 @@ Route::middleware('auth')->group(function () {
             Route::get('/users', [\App\Http\Controllers\Admin\AdminController::class, 'users'])->name('users');
             Route::post('/users/{user}/toggle-status', [\App\Http\Controllers\Admin\AdminController::class, 'toggleStatus'])->name('users.toggle-status');
             Route::get('/rides', [\App\Http\Controllers\Admin\AdminController::class, 'rides'])->name('rides');
+            Route::get('/rates', [\App\Http\Controllers\Admin\AdminController::class, 'vehicleRates'])->name('rates');
+            Route::patch('/rates/{rate}', [\App\Http\Controllers\Admin\AdminController::class, 'updateVehicleRate'])->name('rates.update');
+
+            // Verification Routes
+            Route::get('/verifications', [\App\Http\Controllers\Admin\AdminController::class, 'verifications'])->name('verifications');
+            Route::post('/users/{user}/verify', [\App\Http\Controllers\Admin\AdminController::class, 'verifyUser'])->name('users.verify');
         });
 
         Route::prefix('customer')->name('customer.')->group(function () {
@@ -58,15 +64,19 @@ Route::middleware('auth')->group(function () {
         Route::post('/rides/{ride}/cancel', [CustomerRideController::class, 'cancel'])->name('rides.cancel');
     });
 
-    Route::prefix('driver')->name('driver.')->group(function () {
-        Route::get('/rides/available', [DriverRideController::class, 'available'])->name('rides.available');
-        Route::get('/rides/poll-available', [DriverRideController::class, 'pollAvailable'])->name('rides.poll-available');
-        Route::get('/rides/my', [DriverRideController::class, 'myRides'])->name('rides.my');
-        Route::get('/rides/{ride}', [DriverRideController::class, 'show'])->name('rides.show');
-        Route::post('/rides/{ride}/accept', [DriverRideController::class, 'accept'])->name('rides.accept');
-        Route::post('/rides/{ride}/status', [DriverRideController::class, 'updateStatus'])->name('rides.updateStatus');
+        Route::prefix('driver')->name('driver.')->group(function () {
+            Route::get('/rides/available', [DriverRideController::class, 'available'])->name('rides.available');
+            Route::get('/rides/poll-available', [DriverRideController::class, 'pollAvailable'])->name('rides.poll-available');
+            Route::get('/rides/my', [DriverRideController::class, 'myRides'])->name('rides.my');
+            Route::get('/rides/{ride}', [DriverRideController::class, 'show'])->name('rides.show');
+            Route::post('/rides/{ride}/accept', [DriverRideController::class, 'accept'])->name('rides.accept');
+            Route::post('/rides/{ride}/status', [DriverRideController::class, 'updateStatus'])->name('rides.updateStatus');
 
-        Route::post('/location/update', [DriverLocationController::class, 'update'])->name('location.update');
-    });
+            Route::post('/location/update', [DriverLocationController::class, 'update'])->name('location.update');
+        });
+
+        // Universal Profile Routes
+        Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
+        Route::post('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     });
 });

@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'User Management - Taxi-At-Foot Admin')
 
-@section('content')
-<div class="max-w-7xl mx-auto px-6 py-8 md:py-12 w-full">
+@section('admin-content')
+<div class="px-6 py-8 md:py-12 w-full">
     
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>
@@ -27,7 +27,7 @@
     </div>
 
     <!-- Users Table -->
-    <div class="bg-white border text-left border-neutral-200 rounded-3xl overflow-hidden shadow-sm">
+    <div class="bg-white border text-left border-neutral-200 rounded-[2.5rem] overflow-hidden shadow-sm mb-12">
         
         @if ($users->isEmpty())
              <div class="p-16 flex flex-col items-center justify-center text-center">

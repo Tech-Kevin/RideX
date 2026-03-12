@@ -23,14 +23,64 @@
     <div class="grid grid-cols-1 lg:grid-cols-5 gap-6 max-h-none lg:h-600px">
         <!-- Booking Form Section -->
         <div class="lg:col-span-2 order-2 lg:order-1 h-full flex flex-col">
-            <div class="bg-white border border-neutral-200 rounded-3xl p-6 md:p-8 shadow-xl shadow-neutral-100 flex-1 flex flex-col relative overflow-hidden">
+            <div class="bg-white border border-neutral-200 rounded-[2.5rem] p-6 md:p-8 shadow-xl shadow-neutral-100 flex-1 flex flex-col relative overflow-hidden">
                 <!-- Decoration -->
                 <div class="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full blur-[40px] -mt-10 -mr-10 pointer-events-none"></div>
 
                 <h2 class="text-xl font-bold font-heading text-neutral-900 mb-6">Trip Summary</h2>
 
-                <form method="POST" action="{{ route('customer.rides.store') }}" class="flex flex-col flex-1 h-full">
+                <form method="POST" action="{{ route('customer.rides.store') }}" id="ride-form" class="flex flex-col flex-1 h-full">
                     @csrf
+                    
+                    <!-- Vehicle Selection -->
+                    <div class="mb-8">
+                        <label class="block text-[11px] font-black text-neutral-400 uppercase tracking-widest mb-4 pl-1">Select Vehicle Type</label>
+                        <div class="space-y-3">
+                            @foreach(['bike', 'auto', 'car'] as $type)
+                                @php 
+                                    $vType = \App\Enums\VehicleType::from($type);
+                                    $rate = $rates[$type] ?? null;
+                                @endphp
+                                <label class="relative cursor-pointer group block">
+                                    <input type="radio" name="vehicle_type" value="{{ $type }}" class="peer sr-only vehicle-input" {{ $type === 'bike' ? 'checked' : '' }} onchange="updateFareEstimation()">
+                                    <div class="vehicle-card bg-neutral-50/50 border-2 border-neutral-100 rounded-[1.5rem] p-4 flex items-center gap-4 transition-all relative overflow-hidden">
+                                        <!-- Selection Badge -->
+                                        <div class="check-badge absolute top-3 right-3 w-5 h-5 bg-neutral-900 rounded-full flex items-center justify-center text-white scale-0 transition-transform">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
+                                        </div>
+
+                                        <!-- Icon -->
+                                        <div class="icon-container w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 @if($type === 'bike') bg-blue-100/50 text-blue-600 @elseif($type === 'auto') bg-amber-100/50 text-amber-600 @else bg-emerald-100/50 text-emerald-600 @endif">
+                                            @if($type === 'bike')
+                                                <!-- Bike Icon -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M13 18a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M19 18v-4l-2 -3l-3 -4h-3l3 4l-2 3" /><path d="M17 14h-6.5l-1.5 -3" /></svg>
+                                            @elseif($type === 'auto')
+                                                <!-- Auto Rickshaw Icon -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M19 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M5 17h14v-6a3 3 0 0 0 -3 -3h-10a3 3 0 0 0 -3 3z" /><path d="M5 11h14" /><path d="M9 8v-1a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v1" /></svg>
+                                            @else
+                                                <!-- Car Icon -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 17m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M5 17h-2v-6l2 -5h9l4 5h1a2 2 0 0 1 2 2v4h-2m-4 0h-6m-6 -6h15m-6 0v-5" /></svg>
+                                            @endif
+                                        </div>
+
+                                        <!-- Details -->
+                                        <div class="flex-grow">
+                                            <div class="flex justify-between items-start mb-0.5">
+                                                <h4 class="text-base font-black text-neutral-900 tracking-tight">{{ $vType->label() }}</h4>
+                                                @if($rate)
+                                                    <span class="text-xs font-bold text-neutral-400">₹{{ number_format($rate->rate_per_km, 0) }}/km</span>
+                                                @endif
+                                            </div>
+                                            <div class="flex items-center gap-2">
+                                                <span class="text-[10px] font-bold text-neutral-400 uppercase tracking-widest bg-neutral-100 px-2 py-0.5 rounded-full">Max {{ $vType->maxPassengers() }} Pax</span>
+                                                <span class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest px-2 py-0.5 rounded-full bg-emerald-50">Instant</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
                     
                     <!-- Addresses Container -->
                     <div class="space-y-4 mb-auto">
@@ -90,7 +140,7 @@
         </div>
 
         <!-- Interactive Map Section -->
-        <div class="lg:col-span-3 order-1 lg:order-2 h-[400px] lg:h-full bg-neutral-100 rounded-3xl border-2 border-neutral-200 shadow-inner overflow-hidden relative">
+        <div class="lg:col-span-3 order-1 lg:order-2 h-[400px] lg:h-full bg-neutral-100 rounded-[2.5rem] border-2 border-neutral-200 shadow-inner overflow-hidden relative">
             <div id="map" class="w-full h-full relative z-0"></div>
             
             <div class="absolute top-4 left-4 right-4 z-[2] pointer-events-none">
@@ -123,6 +173,7 @@
     window.routes = {
         nearbyDrivers: '{{ route("customer.rides.nearby-drivers") }}'
     };
+    window.vehicleRates = @json($rates);
 </script>
 <script src="{{ asset('js/customer/ride-create.js') }}"></script>
 @endsection

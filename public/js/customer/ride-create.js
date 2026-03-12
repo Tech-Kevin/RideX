@@ -40,9 +40,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function calculateFare(distance) {
-        const base = 30;
-        const rate = 9;
+        const vehicleType = document.querySelector('input[name="vehicle_type"]:checked')?.value || 'bike';
+        const rates = window.vehicleRates && window.vehicleRates[vehicleType] ? window.vehicleRates[vehicleType] : { base_fare: 30, rate_per_km: 9 };
+        
+        const base = parseFloat(rates.base_fare);
+        const rate = parseFloat(rates.rate_per_km);
         return base + (distance * rate);
+    }
+
+    window.updateFareEstimation = function() {
+        if (!pickup || !drop) return;
+        
+        // Re-calculate using current distance string or stored distance
+        const distanceText = document.getElementById("distance").innerText;
+        const distanceMatch = distanceText.match(/(\d+\.?\d*)/);
+        
+        if (distanceMatch) {
+            const distance = parseFloat(distanceMatch[0]);
+            const fare = calculateFare(distance);
+            document.getElementById("fare").innerText = "₹" + fare.toFixed(2);
+        }
     }
 
     async function reverseGeocode(lat, lng) {

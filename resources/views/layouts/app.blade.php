@@ -9,19 +9,40 @@
     <title>@yield('title', config('app.name', 'Taxi-At-Foot'))</title>
 
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700|space-grotesk:500,600,700" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- Leaflet/Other Styles -->
     @yield('styles')
 
     <!-- Scripts (Vite) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        h1, h2, h3, h4, h5, h6, .font-heading { font-family: 'Space Grotesk', sans-serif; letter-spacing: -0.03em; }
+        :root {
+            --primary: #fbbf24; /* amber-400 */
+            --primary-dark: #f59e0b; /* amber-500 */
+            --secondary: #10b981; /* emerald-500 */
+            --neutral-900: #171717;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            -webkit-font-smoothing: antialiased;
+        }
         
+        h1, h2, h3, h4, h5, h6, .font-heading { 
+            font-family: 'Outfit', sans-serif; 
+            letter-spacing: -0.02em; 
+        }
+        
+        /* Premium shadow utilities */
+        .premium-shadow {
+            shadow-xl shadow-neutral-900/5;
+        }
+
         /* Custom scrollbar */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #f8fafc; }
@@ -33,12 +54,26 @@
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
+        @keyframes scroll-reverse {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0); }
+        }
+        
         .animate-scroll {
             animation: scroll 40s linear infinite;
             width: max-content;
         }
-        .animate-scroll:hover {
+        .animate-scroll-reverse {
+            animation: scroll-reverse 50s linear infinite;
+            width: max-content;
+        }
+        .animate-scroll:hover, .animate-scroll-reverse:hover {
             animation-play-state: paused;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
     </style>
 </head>
@@ -80,6 +115,8 @@
 
                             @if ($user->isAdmin())
                                 <a href="{{ route('admin.dashboard') }}" class="px-4 py-2 rounded-xl text-indigo-600 font-bold hover:bg-indigo-50 hover:text-indigo-700 transition-colors">Admin Panel</a>
+                                <a href="{{ route('admin.verifications') }}" class="px-4 py-2 rounded-xl text-amber-600 font-bold hover:bg-amber-50 hover:text-amber-700 transition-colors">Verifications</a>
+                                <a href="{{ route('admin.rates') }}" class="px-4 py-2 rounded-xl text-neutral-600 font-semibold hover:bg-neutral-100 hover:text-neutral-900 transition-colors">Vehicle Rates</a>
                             @endif
                         </div>
 
@@ -96,7 +133,14 @@
                             </div>
 
                             <!-- Dropdown Menu -->
-                            <div class="absolute right-0 top-full mt-2 w-48 bg-white rounded-2xl shadow-xl border border-neutral-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform origin-top translate-y-2 group-hover:translate-y-0 py-2">
+                            <div class="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-xl border border-neutral-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform origin-top translate-y-2 group-hover:translate-y-0 py-2">
+                                <a href="{{ route('profile') }}" class="flex items-center gap-3 px-4 py-3 text-sm text-neutral-700 hover:bg-neutral-50 font-bold transition-all border-b border-neutral-50 mb-1">
+                                    <div class="w-8 h-8 rounded-lg bg-neutral-100 flex items-center justify-center text-neutral-600">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                                    </div>
+                                    My Profile
+                                </a>
+
                                 <a href="{{ route('dashboard') }}" class="block md:hidden px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 font-medium">Dashboard</a>
                                 
                                 @if ($user->isCustomer())
@@ -109,6 +153,7 @@
 
                                 @if ($user->isAdmin())
                                     <a href="{{ route('admin.dashboard') }}" class="block md:hidden px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 font-bold whitespace-nowrap border-t border-neutral-100 mt-2 pt-2">Admin Panel</a>
+                                    <a href="{{ route('admin.rates') }}" class="block md:hidden px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-50 font-medium whitespace-nowrap">Vehicle Rates</a>
                                 @endif
                                 
                                 <div class="h-px bg-neutral-100 my-1 md:hidden"></div>

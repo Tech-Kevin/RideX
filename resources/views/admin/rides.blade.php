@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 
 @section('title', 'Ride Oversight - Taxi-At-Foot Admin')
 
-@section('content')
-<div class="max-w-7xl mx-auto px-6 py-8 md:py-12 w-full">
+@section('admin-content')
+<div class="px-6 py-8 md:py-12 w-full">
     
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 gap-4">
         <div>

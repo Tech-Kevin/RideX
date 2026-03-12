@@ -73,4 +73,45 @@ class AdminController extends Controller
             'message' => $user->is_active ? 'User activated successfully.' : 'User deactivated successfully.'
         ]);
     }
+
+    public function vehicleRates()
+    {
+        $rates = \App\Models\VehicleRate::all();
+        return view('admin.rates', compact('rates'));
+    }
+
+    public function updateVehicleRate(Request $request, \App\Models\VehicleRate $rate)
+    {
+        $request->validate([
+            'base_fare' => 'required|numeric|min:0',
+            'rate_per_km' => 'required|numeric|min:0',
+        ]);
+
+        $rate->update($request->only('base_fare', 'rate_per_km'));
+
+        return back()->with('success', "Rates for {$rate->vehicle_type->label()} updated successfully.");
+    }
+    public function verifications()
+    {
+        $users = User::whereIn('verification_status', ['pending', 'rejected'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(20);
+
+        return view('admin.verifications', compact('users'));
+    }
+
+    public function verifyUser(Request $request, User $user)
+    {
+        $request->validate([
+            'status' => 'required|in:approved,rejected',
+            'rejection_note' => 'required_if:status,rejected|nullable|string|max:500',
+        ]);
+
+        $user->update([
+            'verification_status' => $request->status,
+            'rejection_note' => $request->status === 'approved' ? null : $request->rejection_note,
+        ]);
+
+        return back()->with('success', "User verification {$request->status} successfully.");
+    }
 }

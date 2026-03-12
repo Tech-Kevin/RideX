@@ -26,12 +26,14 @@ class Ride extends Model
         'started_at',
         'completed_at',
         'cancelled_at',
+        'vehicle_type',
     ];
 
     protected function casts(): array
     {
         return [
             'status' => RideStatus::class,
+            'vehicle_type' => \App\Enums\VehicleType::class,
             'pickup_lat' => 'decimal:7',
             'pickup_lng' => 'decimal:7',
             'drop_lat' => 'decimal:7',

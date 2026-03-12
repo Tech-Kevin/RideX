@@ -6,11 +6,13 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, InteractsWithMedia;
 
     /**
      * The attributes that are mass assignable.
@@ -27,6 +29,12 @@ class User extends Authenticatable implements MustVerifyEmail
         'is_active',
         'current_lat',
         'current_lng',
+        'vehicle_type',
+        'dob',
+        'vehicle_number',
+        'licence_number',
+        'verification_status',
+        'rejection_note',
     ];
 
     /**
@@ -53,6 +61,8 @@ class User extends Authenticatable implements MustVerifyEmail
             'is_active' => 'boolean',
             'current_lat' => 'decimal:7',
             'current_lng' => 'decimal:7',
+            'vehicle_type' => \App\Enums\VehicleType::class,
+            'dob' => 'date',
         ];
     }
     public function customerRides()
