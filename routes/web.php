@@ -61,6 +61,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/rides/nearby-drivers', [CustomerRideController::class, 'nearbyDrivers'])->name('rides.nearby-drivers');
         Route::get('/rides/{ride}', [CustomerRideController::class, 'show'])->name('rides.show');
         Route::get('/rides/{ride}/driver-location', [CustomerRideController::class, 'driverLocation'])->name('rides.driver-location');
+        Route::get('/rides/{ride}/status', [CustomerRideController::class, 'rideStatus'])->name('rides.status');
         Route::post('/rides/{ride}/cancel', [CustomerRideController::class, 'cancel'])->name('rides.cancel');
     });
 
@@ -70,7 +71,9 @@ Route::middleware('auth')->group(function () {
             Route::get('/rides/my', [DriverRideController::class, 'myRides'])->name('rides.my');
             Route::get('/rides/{ride}', [DriverRideController::class, 'show'])->name('rides.show');
             Route::post('/rides/{ride}/accept', [DriverRideController::class, 'accept'])->name('rides.accept');
+            Route::post('/rides/{ride}/accept-ajax', [DriverRideController::class, 'acceptAjax'])->name('rides.accept-ajax');
             Route::post('/rides/{ride}/status', [DriverRideController::class, 'updateStatus'])->name('rides.updateStatus');
+            Route::post('/rides/{ride}/status-ajax', [DriverRideController::class, 'updateStatusAjax'])->name('rides.updateStatus-ajax');
 
             Route::post('/location/update', [DriverLocationController::class, 'update'])->name('location.update');
         });

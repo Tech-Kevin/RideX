@@ -32,11 +32,22 @@ class DriverRideController extends Controller
     {
         $this->ensureDriver();
 
+        $driver = Auth::user();
+
         $rides = Ride::with('customer')
             ->where('status', RideStatus::PENDING)
-            ->where('vehicle_type', Auth::user()->vehicle_type)
+            ->where('vehicle_type', $driver->vehicle_type)
             ->latest()
-            ->get();
+            ->get()
+            ->map(function ($ride) use ($driver) {
+                $ride->pickup_distance_km = ($driver->current_lat && $driver->current_lng)
+                    ? calculateDistance(
+                        (float) $driver->current_lat, (float) $driver->current_lng,
+                        (float) $ride->pickup_lat,    (float) $ride->pickup_lng
+                      )
+                    : null;
+                return $ride;
+            });
 
         return view('driver.rides.available', compact('rides'));
     }
@@ -45,11 +56,22 @@ class DriverRideController extends Controller
     {
         $this->ensureDriver();
 
+        $driver = Auth::user();
+
         $rides = Ride::with('customer')
             ->where('status', RideStatus::PENDING)
-            ->where('vehicle_type', Auth::user()->vehicle_type)
+            ->where('vehicle_type', $driver->vehicle_type)
             ->latest()
-            ->get();
+            ->get()
+            ->map(function ($ride) use ($driver) {
+                $ride->pickup_distance_km = ($driver->current_lat && $driver->current_lng)
+                    ? calculateDistance(
+                        (float) $driver->current_lat, (float) $driver->current_lng,
+                        (float) $ride->pickup_lat,    (float) $ride->pickup_lng
+                      )
+                    : null;
+                return $ride;
+            });
 
         return response()->json([
             'rides' => $rides
@@ -113,5 +135,52 @@ class DriverRideController extends Controller
         }
 
         return back()->with('success', 'Ride status updated successfully.');
+    }
+
+    public function acceptAjax(Ride $ride, RideService $rideService): JsonResponse
+    {
+        $this->ensureDriver();
+
+        try {
+            $rideService->acceptRide($ride, Auth::user());
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
+
+        $ride->refresh();
+        $statusValue = $ride->status->value;
+
+        return response()->json([
+            'status'       => $statusValue,
+            'status_label' => rideStatusLabel($ride->status),
+            'transitions'  => allowedRideStatusTransitions()[$statusValue] ?? [],
+            'is_active'    => in_array($statusValue, ['accepted', 'driver_arriving', 'in_progress']),
+        ]);
+    }
+
+    public function updateStatusAjax(Ride $ride, RideService $rideService): JsonResponse
+    {
+        $this->ensureDriver();
+
+        abort_unless($ride->driver_id === Auth::id(), 403);
+
+        $newStatusValue = request()->input('status');
+
+        try {
+            $newStatus = RideStatus::from($newStatusValue);
+            $rideService->updateRideStatus($ride, $newStatus, Auth::user());
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 422);
+        }
+
+        $ride->refresh();
+        $statusValue = $ride->status->value;
+
+        return response()->json([
+            'status'       => $statusValue,
+            'status_label' => rideStatusLabel($ride->status),
+            'transitions'  => allowedRideStatusTransitions()[$statusValue] ?? [],
+            'is_active'    => in_array($statusValue, ['accepted', 'driver_arriving', 'in_progress']),
+        ]);
     }
 }

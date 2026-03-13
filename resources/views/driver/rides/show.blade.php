@@ -36,7 +36,7 @@
                 default     => 'bg-neutral-100 border-neutral-200 text-neutral-500',
             };
         @endphp
-        <div class="px-4 py-2 rounded-xl {{ $badgeClass }} shadow-sm">
+        <div id="ride-status-badge" class="px-4 py-2 rounded-xl {{ $badgeClass }} shadow-sm">
             <span class="text-sm font-black uppercase tracking-widest">{{ rideStatusLabel($ride->status) }}</span>
         </div>
     </div>
@@ -67,7 +67,7 @@
                     Action Center
                 </h2>
 
-                <div class="flex flex-col gap-3">
+                <div id="action-center-buttons" class="flex flex-col gap-3">
                     @php
                         $statusStr = $ride->status->value ?? 'pending';
                         $allTransitions = allowedRideStatusTransitions();
@@ -75,52 +75,38 @@
                     @endphp
 
                     @if(in_array('accepted', $transitions))
-                        <form method="POST" action="{{ route('driver.rides.accept', $ride) }}">
-                             @csrf
-                             <button class="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-white font-bold rounded-xl transition-all shadow-md shadow-emerald-500/20 active:scale-[0.98]">
-                                Accept Ride
-                             </button>
-                        </form>
+                        <button data-action="accept"
+                            class="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-white font-bold rounded-xl transition-all shadow-md shadow-emerald-500/20 active:scale-[0.98]">
+                            Accept Ride
+                        </button>
                     @endif
 
                     @if(in_array('driver_arriving', $transitions))
-                        <form method="POST" action="{{ route('driver.rides.updateStatus', $ride) }}">
-                             @csrf
-                             <input type="hidden" name="status" value="driver_arriving">
-                             <button class="w-full py-4 bg-indigo-500 hover:bg-indigo-400 text-white font-bold rounded-xl transition-all shadow-md shadow-indigo-500/20 active:scale-[0.98]">
-                                I'm Arriving at Pickup
-                             </button>
-                        </form>
+                        <button data-action="update-status" data-status="driver_arriving"
+                            class="w-full py-4 bg-indigo-500 hover:bg-indigo-400 text-white font-bold rounded-xl transition-all shadow-md shadow-indigo-500/20 active:scale-[0.98]">
+                            I'm Arriving at Pickup
+                        </button>
                     @endif
 
                     @if(in_array('in_progress', $transitions))
-                        <form method="POST" action="{{ route('driver.rides.updateStatus', $ride) }}">
-                             @csrf
-                             <input type="hidden" name="status" value="in_progress">
-                             <button class="w-full py-4 bg-amber-500 hover:bg-amber-400 text-neutral-900 font-black rounded-xl transition-all shadow-md shadow-amber-500/20 active:scale-[0.98]">
-                                Start Trip (Passenger Onboard)
-                             </button>
-                        </form>
+                        <button data-action="update-status" data-status="in_progress"
+                            class="w-full py-4 bg-amber-500 hover:bg-amber-400 text-neutral-900 font-black rounded-xl transition-all shadow-md shadow-amber-500/20 active:scale-[0.98]">
+                            Start Trip (Passenger Onboard)
+                        </button>
                     @endif
 
                     @if(in_array('completed', $transitions))
-                        <form method="POST" action="{{ route('driver.rides.updateStatus', $ride) }}">
-                             @csrf
-                             <input type="hidden" name="status" value="completed">
-                             <button class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl transition-all shadow-md shadow-emerald-600/20 active:scale-[0.98]">
-                                Complete Trip (Passenger Dropped)
-                             </button>
-                        </form>
+                        <button data-action="update-status" data-status="completed"
+                            class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-black rounded-xl transition-all shadow-md shadow-emerald-600/20 active:scale-[0.98]">
+                            Complete Trip (Passenger Dropped)
+                        </button>
                     @endif
-                    
+
                     @if(in_array('cancelled', $transitions))
-                        <form method="POST" action="{{ route('driver.rides.updateStatus', $ride) }}">
-                             @csrf
-                             <input type="hidden" name="status" value="cancelled">
-                             <button class="w-full py-3 mt-4 bg-white hover:bg-rose-50 border border-neutral-200 text-rose-600 font-bold rounded-xl transition-all active:scale-[0.98]">
-                                Cancel Ride
-                             </button>
-                        </form>
+                        <button data-action="update-status" data-status="cancelled"
+                            class="w-full py-3 mt-4 bg-white hover:bg-rose-50 border border-neutral-200 text-rose-600 font-bold rounded-xl transition-all active:scale-[0.98]">
+                            Cancel Ride
+                        </button>
                     @endif
 
                     @if(empty($transitions))
@@ -207,6 +193,59 @@
 
     </div>
 </div>
+
+{{-- ═══ TEST LOCATION PANEL ═══ --}}
+<div id="test-location-panel" class="fixed bottom-6 right-6 z-[9999] w-80">
+    {{-- Toggle button --}}
+    <button id="test-panel-toggle"
+        class="ml-auto mb-2 flex items-center gap-2 px-4 py-2 bg-neutral-900 hover:bg-neutral-800 text-white text-xs font-black uppercase tracking-widest rounded-xl shadow-xl transition-all"
+        onclick="document.getElementById('test-panel-body').classList.toggle('hidden')">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>
+        Test Location
+        <span class="px-1.5 py-0.5 bg-amber-400 text-neutral-900 rounded text-[9px] font-black">DEV</span>
+    </button>
+
+    {{-- Panel body --}}
+    <div id="test-panel-body" class="hidden bg-white border border-neutral-200 rounded-2xl shadow-2xl p-5 space-y-4">
+        <div class="flex items-center justify-between border-b border-neutral-100 pb-3">
+            <p class="text-[11px] font-black tracking-widest uppercase text-neutral-500">📍 Set Driver Location</p>
+            <span class="text-[9px] px-2 py-0.5 bg-amber-100 text-amber-700 font-black rounded uppercase tracking-wider">Testing Mode</span>
+        </div>
+
+        {{-- GPS Button --}}
+        <button id="btn-use-gps"
+            class="w-full flex items-center justify-center gap-2 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white font-bold text-sm rounded-xl transition-all active:scale-[0.97]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Use My GPS
+        </button>
+
+        {{-- Map Click Mode --}}
+        <button id="btn-map-click-toggle"
+            class="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-bold text-sm rounded-xl transition-all active:scale-[0.97]">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5"/></svg>
+            <span id="map-click-label">Click Map to Place Me</span>
+        </button>
+
+        {{-- Manual Coords --}}
+        <div class="space-y-2">
+            <p class="text-[10px] font-black tracking-widest uppercase text-neutral-400">Manual Coordinates</p>
+            <div class="grid grid-cols-2 gap-2">
+                <input id="input-lat" type="number" step="any" placeholder="Latitude"
+                    class="w-full px-3 py-2 border border-neutral-200 rounded-xl text-sm font-mono text-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                <input id="input-lng" type="number" step="any" placeholder="Longitude"
+                    class="w-full px-3 py-2 border border-neutral-200 rounded-xl text-sm font-mono text-neutral-700 focus:outline-none focus:ring-2 focus:ring-blue-300">
+            </div>
+            <button id="btn-set-manual"
+                class="w-full py-2.5 bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-sm rounded-xl transition-all active:scale-[0.97]">
+                Set This Location
+            </button>
+        </div>
+
+        {{-- Status display --}}
+        <div id="test-location-status" class="text-center text-[10px] font-mono text-neutral-400 hidden"></div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')
@@ -217,8 +256,14 @@
         pickupLng: '{{ $ride->pickup_lng }}',
         dropLat: '{{ $ride->drop_lat }}',
         dropLng: '{{ $ride->drop_lng }}',
+        driverLat: '{{ Auth::user()->current_lat ?? '' }}',
+        driverLng: '{{ Auth::user()->current_lng ?? '' }}',
+        currentStatus: '{{ $ride->status->value }}',
         isActiveRide: {{ in_array($ride->status->value, ['accepted', 'driver_arriving', 'in_progress']) ? 'true' : 'false' }},
-        locationUpdateRoute: '{{ route("driver.location.update") }}'
+        locationUpdateRoute: '{{ route("driver.location.update") }}',
+        acceptAjaxRoute: '{{ route("driver.rides.accept-ajax", $ride) }}',
+        updateStatusAjaxRoute: '{{ route("driver.rides.updateStatus-ajax", $ride) }}',
+        csrfToken: '{{ csrf_token() }}'
     };
 </script>
 <script src="{{ asset('js/driver/ride-show.js') }}"></script>

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+﻿@extends('layouts.app')
 
 @section('title', 'Available Rides - RideX')
 
@@ -72,22 +72,38 @@
                     </div>
                 </div>
 
-                <!-- Footer Metas -->
-                <div class="flex justify-between items-center mt-6 py-4 border-t border-neutral-100">
-                    <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                                <!-- Footer Metas -->
+                <div class="mt-6 pt-4 border-t border-neutral-100 space-y-2">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <div class="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                            </div>
+                            <div>
+                                <p class="text-[10px] font-black tracking-widest uppercase text-neutral-400 leading-none mb-0.5">Rider</p>
+                                <p class="text-xs font-bold text-neutral-900">{{ $ride->customer->name ?? 'Guest' }}</p>
+                            </div>
                         </div>
-                        <div>
-                            <p class="text-[10px] font-black tracking-widest uppercase text-neutral-400 leading-none mb-0.5">Rider</p>
-                            <p class="text-xs font-bold text-neutral-900">{{ $ride->customer->name ?? 'Guest' }}</p>
+                        <div class="text-right">
+                            <p class="text-[10px] font-black tracking-widest uppercase text-neutral-400 leading-none mb-0.5">Trip Distance</p>
+                            <p class="text-sm font-bold font-mono text-neutral-900">{{ $ride->distance_km }} km</p>
                         </div>
                     </div>
 
-                    <div class="text-right">
-                        <p class="text-[10px] font-black tracking-widest uppercase text-neutral-400 leading-none mb-0.5">Distance</p>
-                        <p class="text-sm font-bold font-mono text-neutral-900">{{ $ride->distance_km }} km</p>
+                    @if($ride->pickup_distance_km !== null)
+                    <div class="flex items-center justify-between bg-blue-50 border border-blue-100 rounded-xl px-3 py-2.5">
+                        <div class="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+                            <p class="text-[10px] font-black tracking-widest uppercase text-blue-600">Your drive to pickup</p>
+                        </div>
+                        <p class="text-sm font-bold font-mono text-blue-700">{{ $ride->pickup_distance_km }} km away</p>
                     </div>
+                    @else
+                    <div class="flex items-center gap-2 bg-neutral-50 border border-dashed border-neutral-200 rounded-xl px-3 py-2.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-neutral-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <p class="text-[10px] font-black tracking-widest uppercase text-neutral-400">Set location to see pickup distance</p>
+                    </div>
+                    @endif
                 </div>
 
                 <!-- Action -->

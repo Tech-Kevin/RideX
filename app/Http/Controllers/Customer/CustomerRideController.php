@@ -96,6 +96,42 @@ class CustomerRideController extends Controller
         ]);
     }
 
+    public function rideStatus(Ride $ride): JsonResponse
+    {
+        $this->ensureCustomer();
+        abort_unless($ride->customer_id === Auth::id(), 403);
+
+        $ride->load(['driver', 'statusLogs.changedByUser']);
+
+        $driver = null;
+        if ($ride->driver) {
+            $driver = [
+                'name'  => $ride->driver->name,
+                'phone' => $ride->driver->phone,
+                'initial' => strtoupper(substr($ride->driver->name, 0, 1)),
+            ];
+        }
+
+        $statusLogs = $ride->statusLogs->map(function ($log) {
+            return [
+                'status'    => rideStatusLabel($log->status),
+                'by'        => $log->changedByUser?->name ?? 'System Automated',
+                'remarks'   => $log->remarks ?? '-',
+                'timestamp' => $log->created_at->format('H:i A'),
+            ];
+        });
+
+        $statusValue = $ride->status->value;
+
+        return response()->json([
+            'status'         => $statusValue,
+            'status_label'   => rideStatusLabel($ride->status),
+            'driver'         => $driver,
+            'status_logs'    => $statusLogs,
+            'is_driver_active' => in_array($statusValue, ['accepted', 'driver_arriving', 'in_progress']) && $ride->driver_id,
+        ]);
+    }
+
     public function cancel(Ride $ride, RideService $rideService): RedirectResponse
     {
         $this->ensureCustomer();

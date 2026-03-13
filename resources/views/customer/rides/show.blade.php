@@ -99,7 +99,7 @@
                                 <th class="p-4 pr-6 text-right">Timestamp</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-neutral-100/80 bg-white">
+                        <tbody id="status-logs-tbody" class="divide-y divide-neutral-100/80 bg-white">
                             @forelse ($ride->statusLogs as $log)
                                 <tr class="hover:bg-neutral-50 transition-colors">
                                     <td class="p-4 pl-6 font-bold text-neutral-800">{{ rideStatusLabel($log->status) }}</td>
@@ -140,7 +140,7 @@
 
                 <div class="flex justify-between items-start mb-6">
                     <h3 class="text-[11px] font-black text-neutral-400 uppercase tracking-widest">Financials</h3>
-                    <span class="inline-block px-3 py-1 text-[10px] font-black uppercase rounded-lg border tracking-widest whitespace-nowrap shadow-sm {{ $badgeClass }}">
+                    <span id="ride-status-badge" class="inline-block px-3 py-1 text-[10px] font-black uppercase rounded-lg border tracking-widest whitespace-nowrap shadow-sm {{ $badgeClass }}">
                         {{ rideStatusLabel($ride->status) }}
                     </span>
                 </div>
@@ -174,6 +174,7 @@
             <div class="bg-white border border-neutral-200 rounded-3xl p-6 shadow-sm relative overflow-hidden">
                 <h3 class="text-[11px] font-black text-neutral-400 uppercase tracking-widest mb-6">Assigned Driver</h3>
 
+                <div id="driver-card-content">
                 @if ($ride->driver)
                     <div class="flex items-center gap-4 mb-4">
                         <div class="w-14 h-14 bg-gradient-to-br from-neutral-800 to-neutral-900 rounded-2xl flex items-center justify-center text-white font-black font-heading text-2xl shadow-md border border-neutral-700">
@@ -204,6 +205,7 @@
                         <p class="text-xs text-neutral-500 font-medium max-w-[150px]">We're searching the area for the best partner.</p>
                     </div>
                 @endif
+                </div>
             </div>
 
         </div>
@@ -223,6 +225,7 @@
         nearbyDriversRoute: '{{ route("customer.rides.nearby-drivers") }}',
         isDriverActive: {{ (in_array($ride->status->value, ['accepted', 'driver_arriving', 'in_progress']) && $ride->driver_id) ? 'true' : 'false' }},
         driverLocationRoute: '{{ route("customer.rides.driver-location", $ride) }}',
+        rideStatusRoute: '{{ route("customer.rides.status", $ride) }}',
         rideId: '{{ $ride->id }}'
     };
 </script>
