@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\DriverStatus;
 use App\Enums\RideStatus;
 use App\Events\RideAccepted;
 use App\Events\RideRequested;
@@ -14,6 +15,8 @@ use Illuminate\Support\Facades\DB;
 
 class RideService
 {
+    public function __construct(private SurgePricingService $surgeService) {}
+
     public function createRide(array $data, User $customer): Ride
     {
         $distance = calculateDistance(
@@ -23,28 +26,39 @@ class RideService
             (float) $data['drop_lng']
         );
 
-        $fare = calculateFare($distance, $data['vehicle_type']);
+        $baseFare = calculateFare($distance, $data['vehicle_type']);
 
-        $ride = DB::transaction(function () use ($data, $distance, $fare, $customer) {
+        // Compute live supply/demand for demand-based surge evaluation
+        $availableDrivers = User::where('role', 'driver')
+            ->where('driver_status', DriverStatus::ONLINE_AVAILABLE->value)
+            ->count();
+        $activeRiders = Ride::whereIn('status', [RideStatus::PENDING->value])->count();
+
+        $surge      = $this->surgeService->getActiveMultiplier($availableDrivers, $activeRiders);
+        $finalFare  = round($baseFare * $surge['multiplier'], 2);
+
+        $ride = DB::transaction(function () use ($data, $distance, $finalFare, $surge, $customer) {
             $ride = Ride::create([
-                'customer_id' => $customer->id,
-                'vehicle_type' => $data['vehicle_type'],
-                'pickup_address' => $data['pickup_address'],
-                'pickup_lat' => $data['pickup_lat'],
-                'pickup_lng' => $data['pickup_lng'],
-                'drop_address' => $data['drop_address'],
-                'drop_lat' => $data['drop_lat'],
-                'drop_lng' => $data['drop_lng'],
-                'distance_km' => $distance,
-                'estimated_fare' => $fare,
-                'status' => RideStatus::PENDING,
+                'customer_id'     => $customer->id,
+                'vehicle_type'    => $data['vehicle_type'],
+                'pickup_address'  => $data['pickup_address'],
+                'pickup_lat'      => $data['pickup_lat'],
+                'pickup_lng'      => $data['pickup_lng'],
+                'drop_address'    => $data['drop_address'],
+                'drop_lat'        => $data['drop_lat'],
+                'drop_lng'        => $data['drop_lng'],
+                'distance_km'     => $distance,
+                'estimated_fare'  => $finalFare,
+                'surge_multiplier'=> $surge['multiplier'],
+                'surge_rule_name' => $surge['rule_name'],
+                'status'          => RideStatus::PENDING,
             ]);
 
             RideStatusLog::create([
-                'ride_id' => $ride->id,
+                'ride_id'    => $ride->id,
                 'changed_by' => $customer->id,
-                'status' => RideStatus::PENDING->value,
-                'remarks' => 'Ride requested by customer.',
+                'status'     => RideStatus::PENDING->value,
+                'remarks'    => 'Ride requested by customer.' . ($surge['multiplier'] > 1 ? " Surge: {$surge['multiplier']}x ({$surge['rule_name']})." : ''),
             ]);
 
             return $ride;
@@ -92,16 +106,19 @@ class RideService
             }
 
             $lockedRide->update([
-                'driver_id' => $driver->id,
-                'status' => RideStatus::ACCEPTED,
+                'driver_id'   => $driver->id,
+                'status'      => RideStatus::ACCEPTED,
                 'accepted_at' => now(),
             ]);
 
+            // Update driver operational status
+            $driver->update(['driver_status' => DriverStatus::ON_TRIP]);
+
             RideStatusLog::create([
-                'ride_id' => $lockedRide->id,
+                'ride_id'    => $lockedRide->id,
                 'changed_by' => $driver->id,
-                'status' => RideStatus::ACCEPTED->value,
-                'remarks' => 'Ride accepted by driver.',
+                'status'     => RideStatus::ACCEPTED->value,
+                'remarks'    => 'Ride accepted by driver.',
             ]);
         });
 
@@ -121,15 +138,12 @@ class RideService
 
     public function updateRideStatus(Ride $ride, RideStatus $newStatus, User $driver): Ride
     {
-        // $ride->status is expected to be cast to the Enum. 
         if (!canTransitionRideStatus($ride->status->value ?? $ride->status, $newStatus->value)) {
             throw new \Exception('Invalid status transition.');
         }
 
         DB::transaction(function () use ($ride, $newStatus, $driver) {
-            $updateData = [
-                'status' => $newStatus,
-            ];
+            $updateData = ['status' => $newStatus];
 
             if ($newStatus === RideStatus::IN_PROGRESS) {
                 $updateData['started_at'] = now();
@@ -137,7 +151,7 @@ class RideService
 
             if ($newStatus === RideStatus::COMPLETED) {
                 $updateData['completed_at'] = now();
-                $updateData['final_fare'] = $ride->estimated_fare;
+                $updateData['final_fare']   = $ride->estimated_fare;
             }
 
             if ($newStatus === RideStatus::CANCELLED) {
@@ -146,11 +160,20 @@ class RideService
 
             $ride->update($updateData);
 
+            // Sync driver_status with ride lifecycle
+            $driverStatus = match($newStatus) {
+                RideStatus::COMPLETED, RideStatus::CANCELLED => DriverStatus::ONLINE_AVAILABLE,
+                default                                       => null,
+            };
+            if ($driverStatus) {
+                $driver->update(['driver_status' => $driverStatus]);
+            }
+
             RideStatusLog::create([
-                'ride_id' => $ride->id,
+                'ride_id'    => $ride->id,
                 'changed_by' => $driver->id,
-                'status' => $newStatus->value,
-                'remarks' => 'Ride status updated by driver.',
+                'status'     => $newStatus->value,
+                'remarks'    => 'Ride status updated by driver.',
             ]);
         });
 

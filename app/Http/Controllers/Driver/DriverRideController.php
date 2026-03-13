@@ -6,7 +6,9 @@ use App\Enums\RideStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Driver\UpdateRideStatusRequest;
 use App\Models\Ride;
+use App\Models\User;
 use App\Services\RideService;
+use App\Services\SurgePricingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +16,9 @@ use Illuminate\View\View;
 
 class DriverRideController extends Controller
 {
+    public function __construct(private SurgePricingService $surgeService) {}
+
+
     private function ensureDriver(): void
     {
         $user = Auth::user();
@@ -73,8 +78,16 @@ class DriverRideController extends Controller
                 return $ride;
             });
 
+        $availableCount = (int) User::where('role', 'driver')
+            ->where('driver_status', \App\Enums\DriverStatus::ONLINE_AVAILABLE->value)
+            ->count();
+        $pendingCount = (int) Ride::where('status', RideStatus::PENDING->value)->count();
+        $surge = $this->surgeService->getActiveMultiplier($availableCount, $pendingCount);
+
         return response()->json([
-            'rides' => $rides
+            'rides'            => $rides,
+            'surge_multiplier' => $surge['multiplier'] ?? 1.00,
+            'surge_label'      => $surge['multiplier'] > 1 ? "🔥 Surge Active ({$surge['multiplier']}x)" : null,
         ]);
     }
 

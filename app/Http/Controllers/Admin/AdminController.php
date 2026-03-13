@@ -2,13 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\DriverStatus;
+use App\Enums\RideStatus;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\User;
 use App\Models\Ride;
+use App\Models\User;
+use App\Services\SurgePricingService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    public function __construct(private SurgePricingService $surgeService) {}
+
+    /* ─── Dashboard ─────────────────────────────────── */
     public function dashboard()
     {
         $totalCustomers = User::where('role', 'customer')->count();
@@ -114,4 +121,55 @@ class AdminController extends Controller
 
         return back()->with('success', "User verification {$request->status} successfully.");
     }
+
+    /* ─── Operations Panel ───────────────────────────── */
+    public function operations()
+    {
+        $metrics = $this->buildMetrics();
+        return view('admin.operations', compact('metrics'));
+    }
+
+    public function operationsMetrics(): JsonResponse
+    {
+        return response()->json($this->buildMetrics());
+    }
+
+    private function buildMetrics(): array
+    {
+        $drivers = User::where('role', 'driver');
+
+        $totalDrivers     = (clone $drivers)->count();
+        $onlineAvailable  = (clone $drivers)->where('driver_status', DriverStatus::ONLINE_AVAILABLE->value)->count();
+        $onTrip           = (clone $drivers)->where('driver_status', DriverStatus::ON_TRIP->value)->count();
+        $onBreak          = (clone $drivers)->where('driver_status', DriverStatus::ON_BREAK->value)->count();
+        $offline          = (clone $drivers)->where('driver_status', DriverStatus::OFFLINE->value)->count();
+        $suspended        = (clone $drivers)->where('driver_status', DriverStatus::SUSPENDED->value)->count();
+
+        $activeRiders     = Ride::where('status', RideStatus::PENDING->value)->count();
+        $ongoingTrips     = Ride::whereIn('status', [
+            RideStatus::ACCEPTED->value,
+            RideStatus::DRIVER_ARRIVING->value,
+            RideStatus::IN_PROGRESS->value,
+        ])->count();
+        $completedToday   = Ride::where('status', RideStatus::COMPLETED->value)
+            ->whereDate('completed_at', today())
+            ->count();
+
+        $ratio = $onlineAvailable > 0
+            ? round($activeRiders / $onlineAvailable, 2)
+            : ($activeRiders > 0 ? 999 : 0);
+
+        $surge = $this->surgeService->getActiveMultiplier($onlineAvailable, $activeRiders);
+
+        return compact(
+            'totalDrivers', 'onlineAvailable', 'onTrip', 'onBreak',
+            'offline', 'suspended', 'activeRiders', 'ongoingTrips',
+            'completedToday', 'ratio',
+        ) + [
+            'surge_multiplier' => $surge['multiplier'],
+            'surge_rule_name'  => $surge['rule_name'],
+            'surge_active'     => $surge['multiplier'] > 1.00,
+        ];
+    }
 }
+

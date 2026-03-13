@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use App\Enums\DriverStatus;
 
 class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
@@ -27,6 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
         'role',
         'is_phone_verified',
         'is_active',
+        'driver_status',
         'current_lat',
         'current_lng',
         'vehicle_type',
@@ -56,13 +58,14 @@ class User extends Authenticatable implements MustVerifyEmail, HasMedia
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password'          => 'hashed',
             'is_phone_verified' => 'boolean',
-            'is_active' => 'boolean',
-            'current_lat' => 'decimal:7',
-            'current_lng' => 'decimal:7',
-            'vehicle_type' => \App\Enums\VehicleType::class,
-            'dob' => 'date',
+            'is_active'         => 'boolean',
+            'current_lat'       => 'decimal:7',
+            'current_lng'       => 'decimal:7',
+            'vehicle_type'      => \App\Enums\VehicleType::class,
+            'driver_status'     => DriverStatus::class,
+            'dob'               => 'date',
         ];
     }
     public function customerRides()

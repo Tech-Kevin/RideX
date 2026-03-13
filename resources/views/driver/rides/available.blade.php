@@ -4,12 +4,12 @@
 
 @section('content')
 <div class="max-w-6xl mx-auto px-6 py-8 md:py-12 w-full">
+
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <div>
             <h1 class="text-3xl font-black font-heading text-neutral-900 mb-2 tracking-tight">Available Jobs</h1>
             <p class="text-neutral-500 font-medium">Listening for new ride requests in your area.</p>
         </div>
-        
         <!-- Live Indicator -->
         <div class="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-sm rounded-full font-bold text-sm">
             <span class="relative flex h-2.5 w-2.5">
@@ -20,13 +20,24 @@
         </div>
     </div>
 
+    <!-- Surge Banner -->
+    <div id="surge-banner" class="hidden mb-6">
+        <div class="flex items-center gap-4 px-5 py-4 bg-gradient-to-r from-orange-500 to-amber-400 text-white rounded-2xl shadow-lg shadow-orange-400/30">
+            <span class="text-3xl">🔥</span>
+            <div>
+                <p class="font-black text-lg" id="surge-banner-text">Surge Active</p>
+                <p class="text-sm opacity-90">Higher fares active — you earn more per trip right now!</p>
+            </div>
+        </div>
+    </div>
+
     @if (session('success'))
         <div class="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-r-xl mb-8 flex items-center gap-3">
             <svg class="h-5 w-5 text-emerald-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>
             <p class="text-emerald-800 font-medium">{{ session('success') }}</p>
         </div>
     @endif
-    
+
     @if (session('error'))
         <div class="bg-rose-50 border-l-4 border-rose-500 p-4 rounded-r-xl mb-8 flex items-center gap-3">
             <svg class="h-5 w-5 text-rose-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>
@@ -52,6 +63,9 @@
                     <div class="text-right">
                         <p class="text-[10px] font-black tracking-widest uppercase text-emerald-600 mb-0.5">Estimated Payout</p>
                         <p class="text-2xl font-black font-heading text-neutral-900 tracking-tighter">{{ formatCurrency((float) $ride->estimated_fare) }}</p>
+                        @if(isset($ride->surge_multiplier) && $ride->surge_multiplier > 1)
+                        <p class="text-[10px] font-black text-orange-500">🔥 {{ $ride->surge_multiplier }}x surge</p>
+                        @endif
                     </div>
                 </div>
 
@@ -72,7 +86,7 @@
                     </div>
                 </div>
 
-                                <!-- Footer Metas -->
+                <!-- Footer Metas -->
                 <div class="mt-6 pt-4 border-t border-neutral-100 space-y-2">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">

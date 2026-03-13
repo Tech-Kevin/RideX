@@ -75,25 +75,36 @@
             <nav class="space-y-0.5 px-3">
                 @php
                     $navItems = [
-                        ['route' => 'admin.dashboard', 'label' => 'Dashboard', 'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z'],
-                        ['route' => 'admin.users', 'label' => 'Users', 'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'],
-                        ['route' => 'admin.verifications', 'label' => 'Verifications', 'icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'],
-                        ['route' => 'admin.rates', 'label' => 'Vehicle Rates', 'icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
-                        ['route' => 'admin.rides', 'label' => 'Ride History', 'icon' => 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6'],
+                        ['route' => 'admin.dashboard',    'label' => 'Dashboard',    'icon' => 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z'],
+                        ['route' => 'admin.operations',   'label' => 'Operations',   'icon' => 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z', 'live' => true],
+                        ['route' => 'admin.users',         'label' => 'Users',        'icon' => 'M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z'],
+                        ['route' => 'admin.verifications', 'label' => 'Verifications','icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z'],
+                        ['route' => 'admin.rates',         'label' => 'Vehicle Rates','icon' => 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z'],
+                        ['route' => 'admin.rides',         'label' => 'Ride History', 'icon' => 'M13 7h8m0 0v8m0-8l-8 8-4-4-6 6'],
+                        ['separator' => true, 'label' => 'Micro Settings'],
+                        ['route' => 'admin.surge-rules.index', 'label' => 'Surge Pricing', 'icon' => 'M13 10V3L4 14h7v7l9-11h-7z'],
                     ];
                 @endphp
 
                 @foreach($navItems as $item)
+                    @if(isset($item['separator']))
+                        <div x-show="sidebarOpen" x-cloak class="pt-5 pb-1 px-4">
+                            <p class="text-[9px] font-black uppercase tracking-[0.2em] text-neutral-600">{{ $item['label'] }}</p>
+                        </div>
+                    @else
                     @php $active = request()->routeIs($item['route']); @endphp
                     <a href="{{ route($item['route']) }}"
                        class="flex items-center gap-3 py-2.5 rounded-xl font-bold transition-all duration-200 group"
                        :class="sidebarOpen ? 'px-4' : 'justify-center px-2'"
                        title="{{ $item['label'] }}">
-                        <div class="w-8 h-8 flex-shrink-0 rounded-lg flex items-center justify-center transition-all duration-200
+                        <div class="relative w-8 h-8 flex-shrink-0 rounded-lg flex items-center justify-center transition-all duration-200
                             {{ $active ? 'bg-amber-400 text-neutral-900 shadow-lg shadow-amber-400/30' : 'bg-white/5 text-neutral-400 group-hover:bg-amber-400/10 group-hover:text-amber-400' }}">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="{{ $item['icon'] }}" />
                             </svg>
+                            @if(isset($item['live']) && $item['live'])
+                                <span class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-emerald-400 rounded-full border border-[#111827] animate-pulse"></span>
+                            @endif
                         </div>
                         <span class="text-xs tracking-tight transition-colors duration-200 whitespace-nowrap"
                               x-show="sidebarOpen" x-cloak
@@ -102,6 +113,7 @@
                             {{ $item['label'] }}
                         </span>
                     </a>
+                    @endif
                 @endforeach
             </nav>
         </div>

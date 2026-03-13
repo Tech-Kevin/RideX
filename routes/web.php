@@ -52,6 +52,17 @@ Route::middleware('auth')->group(function () {
             // Verification Routes
             Route::get('/verifications', [\App\Http\Controllers\Admin\AdminController::class, 'verifications'])->name('verifications');
             Route::post('/users/{user}/verify', [\App\Http\Controllers\Admin\AdminController::class, 'verifyUser'])->name('users.verify');
+
+            // Operations Panel
+            Route::get('/operations', [\App\Http\Controllers\Admin\AdminController::class, 'operations'])->name('operations');
+            Route::get('/operations/metrics', [\App\Http\Controllers\Admin\AdminController::class, 'operationsMetrics'])->name('operations.metrics');
+
+            // Surge Rules (Micro Settings)
+            Route::get('/surge-rules', [\App\Http\Controllers\Admin\SurgeRuleController::class, 'index'])->name('surge-rules.index');
+            Route::post('/surge-rules', [\App\Http\Controllers\Admin\SurgeRuleController::class, 'store'])->name('surge-rules.store');
+            Route::put('/surge-rules/{surgeRule}', [\App\Http\Controllers\Admin\SurgeRuleController::class, 'update'])->name('surge-rules.update');
+            Route::post('/surge-rules/{surgeRule}/toggle', [\App\Http\Controllers\Admin\SurgeRuleController::class, 'toggleActive'])->name('surge-rules.toggle');
+            Route::delete('/surge-rules/{surgeRule}', [\App\Http\Controllers\Admin\SurgeRuleController::class, 'destroy'])->name('surge-rules.destroy');
         });
 
         Route::prefix('customer')->name('customer.')->group(function () {
