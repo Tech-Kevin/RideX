@@ -73,7 +73,7 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
                 </div>
                 <div>
-                    <h4 class="text-3xl font-black font-heading tracking-tighter" :class="selectedVehicle === 'bike' ? 'text-neutral-900' : 'text-white'" style="color: black;">BIKE</h4>
+                    <h4 class="text-3xl font-black font-heading tracking-tighter" :class="selectedVehicle === 'bike' ? 'text-neutral-900' : 'text-white'">BIKE</h4>
                     <p class="text-xs font-black uppercase tracking-widest" :class="selectedVehicle === 'bike' ? 'text-neutral-900/60' : 'text-neutral-400'">{{ \App\Models\Ride::where('vehicle_type', 'bike')->count() }} Total Rides</p>
                 </div>
             </div>
@@ -98,7 +98,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h4 class="text-3xl font-black font-heading tracking-tighter" :class="selectedVehicle === 'auto' ? 'text-neutral-900' : 'text-white'" style="color: black;">AUTO</h4>
+                    <h4 class="text-3xl font-black font-heading tracking-tighter" :class="selectedVehicle === 'auto' ? 'text-neutral-900' : 'text-white'">AUTO</h4>
                     <p class="text-xs font-black uppercase tracking-widest" :class="selectedVehicle === 'auto' ? 'text-neutral-900/60' : 'text-neutral-400'">{{ \App\Models\Ride::where('vehicle_type', 'auto')->count() }} Total Rides</p>
                 </div>
             </div>
@@ -125,7 +125,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h4 class="text-3xl font-black font-heading tracking-tighter" :class="selectedVehicle === 'car' ? 'text-neutral-900' : 'text-white'" style="color: black;">CAR</h4>
+                    <h4 class="text-3xl font-black font-heading tracking-tighter" :class="selectedVehicle === 'car' ? 'text-neutral-900' : 'text-white'">CAR</h4>
                     <p class="text-xs font-black uppercase tracking-widest" :class="selectedVehicle === 'car' ? 'text-neutral-900/60' : 'text-neutral-400'">{{ \App\Models\Ride::where('vehicle_type', 'car')->count() }} Total Rides</p>
                 </div>
             </div>
@@ -247,8 +247,7 @@
                 <div class="bg-slate-50 rounded-[2rem] p-8 border border-neutral-100 animate-[fade-in-up_0.4s_ease-out]">
                     @php
                         $drivers = \App\Models\User::where('role', 'driver')->get();
-                    @endphp
-                    
+                    @endphp                   
                     <div class="flex items-center justify-between mb-8">
                         <div class="flex items-center gap-4">
                             <div class="w-12 h-12 rounded-2xl bg-amber-400 flex items-center justify-center text-neutral-900 shadow-xl shadow-amber-400/20">

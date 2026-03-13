@@ -134,6 +134,43 @@ class AdminController extends Controller
         return response()->json($this->buildMetrics());
     }
 
+    public function marketplaceTable(Request $request)
+    {
+        $filter = $request->query('filter', 'all');
+        $query = Ride::with(['customer', 'driver'])->latest();
+
+        switch ($filter) {
+            case 'pending':
+                $query->where('status', RideStatus::PENDING->value);
+                break;
+            case 'ongoing':
+                $query->whereIn('status', [
+                    RideStatus::ACCEPTED->value,
+                    RideStatus::DRIVER_ARRIVING->value,
+                    RideStatus::IN_PROGRESS->value,
+                ]);
+                break;
+            case 'completed':
+                $query->where('status', RideStatus::COMPLETED->value)
+                      ->whereDate('completed_at', today());
+                break;
+            case 'cancelled':
+                $query->where('status', RideStatus::CANCELLED->value);
+                break;
+            case 'surge':
+                $query->where('surge_multiplier', '>', 1.00);
+                break;
+            case 'all':
+            default:
+                break;
+        }
+
+        $rides = $query->paginate(15);
+        $rides->withPath(route('admin.operations.marketplace-table'));
+
+        return view('admin.partials.marketplace_table', compact('rides'))->render();
+    }
+
     private function buildMetrics(): array
     {
         $drivers = User::where('role', 'driver');
@@ -154,6 +191,16 @@ class AdminController extends Controller
         $completedToday   = Ride::where('status', RideStatus::COMPLETED->value)
             ->whereDate('completed_at', today())
             ->count();
+            
+        $cancelledTrips   = Ride::where('status', RideStatus::CANCELLED->value)->count();
+        $surgeRides       = Ride::where('surge_multiplier', '>', 1.00)
+            ->whereIn('status', [
+                RideStatus::PENDING->value,
+                RideStatus::ACCEPTED->value,
+                RideStatus::DRIVER_ARRIVING->value,
+                RideStatus::IN_PROGRESS->value,
+            ])->count();
+        $totalRides       = Ride::count();
 
         $ratio = $onlineAvailable > 0
             ? round($activeRiders / $onlineAvailable, 2)
@@ -164,7 +211,7 @@ class AdminController extends Controller
         return compact(
             'totalDrivers', 'onlineAvailable', 'onTrip', 'onBreak',
             'offline', 'suspended', 'activeRiders', 'ongoingTrips',
-            'completedToday', 'ratio',
+            'completedToday', 'cancelledTrips', 'surgeRides', 'totalRides', 'ratio',
         ) + [
             'surge_multiplier' => $surge['multiplier'],
             'surge_rule_name'  => $surge['rule_name'],

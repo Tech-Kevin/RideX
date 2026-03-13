@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
             // Operations Panel
             Route::get('/operations', [\App\Http\Controllers\Admin\AdminController::class, 'operations'])->name('operations');
             Route::get('/operations/metrics', [\App\Http\Controllers\Admin\AdminController::class, 'operationsMetrics'])->name('operations.metrics');
+            Route::get('/operations/marketplace-table', [\App\Http\Controllers\Admin\AdminController::class, 'marketplaceTable'])->name('operations.marketplace-table');
 
             // Surge Rules (Micro Settings)
             Route::get('/surge-rules', [\App\Http\Controllers\Admin\SurgeRuleController::class, 'index'])->name('surge-rules.index');
