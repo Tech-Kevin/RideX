@@ -27,13 +27,20 @@ class CustomerRideController extends Controller
         return view('customer.rides.index', compact('rides'));
     }
 
-    public function create(): View
+    public function create(\App\Services\SurgePricingService $surgeService): View
     {
         $this->ensureCustomer();
 
         $rates = \App\Models\VehicleRate::all()->keyBy('vehicle_type');
 
-        return view('customer.rides.create', compact('rates'));
+        $availableDrivers = User::where('role', 'driver')
+            ->where('driver_status', \App\Enums\DriverStatus::ONLINE_AVAILABLE->value)
+            ->count();
+        $activeRiders = Ride::whereIn('status', [RideStatus::PENDING->value])->count();
+        $surge = $surgeService->getActiveMultiplier($availableDrivers, $activeRiders);
+        $surgeMultiplier = $surge['multiplier'];
+
+        return view('customer.rides.create', compact('rates', 'surgeMultiplier'));
     }
 
     public function store(StoreRideRequest $request, RideService $rideService): RedirectResponse

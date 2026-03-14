@@ -62,7 +62,7 @@
                 </div>
                 <div x-show="sidebarOpen" x-cloak>
                     <p class="text-white font-bold text-sm leading-none mb-1">{{ auth()->user()->name }}</p>
-                    <p class="text-emerald-400 text-[9px] font-black uppercase tracking-widest">● Online</p>
+                    <p class="text-emerald-400 text-[9px] font-black uppercase tracking-widest">Online</p>
                 </div>
             </div>
         </div>

@@ -240,6 +240,12 @@ document.addEventListener('DOMContentLoaded', async function () {
                     tbody.innerHTML = buildStatusLogsHTML(data.status_logs);
                 }
 
+                // Dynamically remove cancel button if ride is no longer in pending or accepted state
+                if (!['pending', 'accepted'].includes(newStatus)) {
+                    const cancelSection = document.getElementById('cancel-ride-section');
+                    if (cancelSection) cancelSection.remove();
+                }
+
                 // If driver just became active, start location polling
                 if (data.is_driver_active && !window.config.isDriverActive) {
                     window.config.isDriverActive = true;

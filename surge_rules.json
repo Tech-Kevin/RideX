@@ -1,0 +1,17 @@
+[
+    {
+        "id": 2,
+        "name": "testing",
+        "type": "festival",
+        "multiplier": "2.00",
+        "conditions": {
+            "date": "2024-03-14"
+        },
+        "is_active": true,
+        "priority": 0,
+        "starts_at": "2026-03-14T10:33:00.000000Z",
+        "ends_at": "2026-03-14T23:59:00.000000Z",
+        "created_at": "2026-03-14T05:03:28.000000Z",
+        "updated_at": "2026-03-14T05:03:28.000000Z"
+    }
+]

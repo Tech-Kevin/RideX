@@ -158,7 +158,7 @@
                 </div>
 
                 @if(in_array($ride->status->value, ['pending', 'accepted']))
-                    <div class="mt-6 pt-6 border-t border-neutral-100 flex justify-end">
+                    <div id="cancel-ride-section" class="mt-6 pt-6 border-t border-neutral-100 flex justify-end">
                         <form action="{{ route('customer.rides.cancel', $ride) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this ride?');">
                             @csrf
                             <button type="submit" class="px-5 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 font-bold text-sm rounded-xl border border-red-200 transition-colors flex items-center gap-2">

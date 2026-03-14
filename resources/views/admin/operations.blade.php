@@ -177,12 +177,12 @@
             <div class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 lg:gap-4 mb-8">
                 @php
                     $activityCards = [
-                        ['key' => 'totalRides', 'filter' => 'all', 'label' => 'All Rides', 'icon' => '🌍', 'accent' => 'border-neutral-200 bg-neutral-50 hover:border-neutral-300 text-neutral-500', 'active_class' => 'ring-2 ring-neutral-400 bg-neutral-100 border-neutral-300', 'num_color' => 'text-neutral-800', 'val' => $metrics['totalRides']],
-                        ['key' => 'activeRiders', 'filter' => 'pending', 'label' => 'Active Requests', 'icon' => '📍', 'accent' => 'border-rose-100 bg-rose-50/50 hover:border-rose-200 text-rose-400', 'active_class' => 'ring-2 ring-rose-500 bg-rose-50 border-rose-300', 'num_color' => 'text-rose-700', 'val' => $metrics['activeRiders']],
-                        ['key' => 'ongoingTrips', 'filter' => 'ongoing', 'label' => 'Ongoing Trips', 'icon' => '🛣️', 'accent' => 'border-blue-100 bg-blue-50/50 hover:border-blue-200 text-blue-400', 'active_class' => 'ring-2 ring-blue-500 bg-blue-50 border-blue-300', 'num_color' => 'text-blue-700', 'val' => $metrics['ongoingTrips']],
-                        ['key' => 'completedToday', 'filter' => 'completed', 'label' => 'Completed (Today)', 'icon' => '✅', 'accent' => 'border-emerald-100 bg-emerald-50/50 hover:border-emerald-200 text-emerald-400', 'active_class' => 'ring-2 ring-emerald-500 bg-emerald-50 border-emerald-300', 'num_color' => 'text-emerald-700', 'val' => $metrics['completedToday']],
-                        ['key' => 'cancelledTrips', 'filter' => 'cancelled', 'label' => 'Cancelled', 'icon' => '🚫', 'accent' => 'border-neutral-100 bg-neutral-50/50 hover:border-neutral-200 text-neutral-400', 'active_class' => 'ring-2 ring-neutral-400 bg-neutral-100 border-neutral-300', 'num_color' => 'text-neutral-600', 'val' => $metrics['cancelledTrips'] ?? 0],
-                        ['key' => 'surgeRides', 'filter' => 'surge', 'label' => 'Surge Active', 'icon' => '🔥', 'accent' => 'border-orange-100 bg-orange-50/50 hover:border-orange-200 text-orange-400', 'active_class' => 'ring-2 ring-orange-500 bg-orange-50 border-orange-300', 'num_color' => 'text-orange-700', 'val' => $metrics['surgeRides'] ?? 0],
+                        ['key' => 'totalRides', 'filter' => 'all', 'label' => 'All Rides', 'accent' => 'border-neutral-200 bg-neutral-50 hover:border-neutral-300 text-neutral-500', 'active_class' => 'ring-2 ring-neutral-400 bg-neutral-100 border-neutral-300', 'num_color' => 'text-neutral-800', 'val' => $metrics['totalRides']],
+                        ['key' => 'activeRiders', 'filter' => 'pending', 'label' => 'Active Requests', 'accent' => 'border-rose-100 bg-rose-50/50 hover:border-rose-200 text-rose-400', 'active_class' => 'ring-2 ring-rose-500 bg-rose-50 border-rose-300', 'num_color' => 'text-rose-700', 'val' => $metrics['activeRiders']],
+                        ['key' => 'ongoingTrips', 'filter' => 'ongoing', 'label' => 'Ongoing Trips', 'accent' => 'border-blue-100 bg-blue-50/50 hover:border-blue-200 text-blue-400', 'active_class' => 'ring-2 ring-blue-500 bg-blue-50 border-blue-300', 'num_color' => 'text-blue-700', 'val' => $metrics['ongoingTrips']],
+                        ['key' => 'completedToday', 'filter' => 'completed', 'label' => 'Completed (Today)', 'accent' => 'border-emerald-100 bg-emerald-50/50 hover:border-emerald-200 text-emerald-400', 'active_class' => 'ring-2 ring-emerald-500 bg-emerald-50 border-emerald-300', 'num_color' => 'text-emerald-700', 'val' => $metrics['completedToday']],
+                        ['key' => 'cancelledTrips', 'filter' => 'cancelled', 'label' => 'Cancelled', 'accent' => 'border-neutral-100 bg-neutral-50/50 hover:border-neutral-200 text-neutral-400', 'active_class' => 'ring-2 ring-neutral-400 bg-neutral-100 border-neutral-300', 'num_color' => 'text-neutral-600', 'val' => $metrics['cancelledTrips'] ?? 0],
+                        ['key' => 'surgeRides', 'filter' => 'surge', 'label' => 'Surge Active', 'accent' => 'border-orange-100 bg-orange-50/50 hover:border-orange-200 text-orange-400', 'active_class' => 'ring-2 ring-orange-500 bg-orange-50 border-orange-300', 'num_color' => 'text-orange-700', 'val' => $metrics['surgeRides'] ?? 0],
                     ];
                 @endphp
                 @foreach($activityCards as $card)
@@ -191,10 +191,10 @@
                         {{ $loop->first ? $card['active_class'] . ' is-active' : '' }}"
                         data-active-class="{{ $card['active_class'] }}"
                         data-inactive-class="{{ $card['accent'] }}">
-                        <p class="text-2xl mb-3 opacity-90 group-hover:scale-110 transition-transform origin-left">{{ $card['icon'] }}</p>
+                        <p class="text-2xl mb-3 opacity-90 group-hover:scale-110 transition-transform origin-left">{{ $card['label'] }}</p>
                         <p class="text-3xl font-black font-heading {{ $card['num_color'] }}" id="stat-{{ $card['key'] }}">
                             {{ $card['val'] }}</p>
-                        <p class="text-[10px] font-bold text-neutral-700 mt-1 uppercase tracking-widest">{{ $card['label'] }}</p>
+                        <p class="text-[10px] font-bold text-neutral-700 mt-1 uppercase tracking-widest"></p>
                     </button>
                 @endforeach
             </div>

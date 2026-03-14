@@ -174,6 +174,7 @@
         nearbyDrivers: '{{ route("customer.rides.nearby-drivers") }}'
     };
     window.vehicleRates = @json($rates);
+    window.surgeMultiplier = {{ isset($surgeMultiplier) ? $surgeMultiplier : 1.00 }};
 </script>
 <script src="{{ asset('js/customer/ride-create.js') }}"></script>
 @endsection

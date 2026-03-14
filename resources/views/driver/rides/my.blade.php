@@ -76,6 +76,9 @@
                                     <div class="flex flex-col gap-1">
                                         <span class="text-xs font-bold uppercase tracking-wider text-neutral-400">Total</span>
                                         <span class="text-sm font-black font-heading text-emerald-600">{{ formatCurrency((float) $ride->estimated_fare) }}</span>
+                                        @if(isset($ride->surge_multiplier) && $ride->surge_multiplier > 1)
+                                        <span class="text-[10px] font-black text-orange-500">🔥 {{ rtrim(rtrim(number_format($ride->surge_multiplier, 2), '0'), '.') }}x surge</span>
+                                        @endif
                                     </div>
                                 </td>
 

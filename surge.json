@@ -1,0 +1,15 @@
+[
+    {
+        "id": 3,
+        "name": "testing",
+        "type": "manual_override",
+        "multiplier": "2.00",
+        "conditions": null,
+        "is_active": true,
+        "priority": 0,
+        "starts_at": "2026-03-14T10:54:00.000000Z",
+        "ends_at": "2026-03-14T23:59:00.000000Z",
+        "created_at": "2026-03-14T05:25:05.000000Z",
+        "updated_at": "2026-03-14T05:25:05.000000Z"
+    }
+]

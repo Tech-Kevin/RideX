@@ -10,10 +10,10 @@
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
             <h1 class="text-2xl font-black font-heading text-neutral-900 tracking-tight flex items-center gap-3">
-                ⚡ Surge Pricing Engine
+                Surge Pricing Engine
                 <span class="text-[10px] px-2 py-1 bg-amber-100 text-amber-700 border border-amber-200 rounded-lg font-black uppercase tracking-widest">Micro Settings</span>
             </h1>
-            <p class="text-sm text-neutral-500 mt-1">Define pricing multipliers. The highest matching rule is applied — no stacking.</p>
+            <p class="text-sm text-neutral-500 mt-1">Define pricing multipliers.</p>
         </div>
         <button @click="showForm = !showForm"
                 class="flex items-center gap-2 px-5 py-2.5 bg-neutral-900 hover:bg-neutral-800 text-white font-bold rounded-xl text-sm transition-all shadow-lg">
@@ -52,10 +52,10 @@
                     <select name="type" x-model="form.type" required
                             class="w-full px-4 py-3 border border-neutral-200 rounded-xl text-sm font-medium focus:outline-none focus:ring-2 focus:ring-amber-300 bg-white">
                         <option value="">Select type…</option>
-                        <option value="peak_hour">🕐 Peak Hour</option>
-                        <option value="festival">🎉 Festival / Event</option>
-                        <option value="demand_based">📊 Demand Based</option>
-                        <option value="manual_override">🔴 Manual Override</option>
+                        <option value="peak_hour"> Peak Hour</option>
+                        <option value="festival"> Festival / Event</option>
+                        <option value="demand_based"> Demand Based</option>
+                        <option value="manual_override"> Manual Override</option>
                     </select>
                 </div>
 
@@ -114,7 +114,7 @@
             {{-- Manual Override --}}
             <div x-show="form.type === 'manual_override'" x-cloak class="p-5 bg-rose-50 border border-rose-100 rounded-2xl">
                 <p class="text-sm font-bold text-rose-700">
-                    🔴 Manual Override is always active while the rule is enabled. Toggle off to deactivate.
+                     Manual Override is always active while the rule is enabled. Toggle off to deactivate.
                 </p>
             </div>
 
@@ -220,16 +220,63 @@
     @endif
 
     {{-- Help card --}}
-    <div class="bg-neutral-800 rounded-3xl p-6 text-white">
-        <h3 class="font-black font-heading text-amber-400 mb-3">⚡ How Surge Pricing Works</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-neutral-300">
-            <div><span class="text-blue-400 font-bold">🕐 Peak Hour</span> — Activates on specific days between defined times (e.g. weekday rush hour)</div>
-            <div><span class="text-purple-400 font-bold">🎉 Festival</span> — Activates on a specific calendar date (e.g. Diwali, New Year's Eve)</div>
-            <div><span class="text-amber-400 font-bold">📊 Demand Based</span> — Fires when riders ÷ available drivers exceeds a threshold automatically</div>
-            <div><span class="text-rose-400 font-bold">🔴 Manual Override</span> — Always active while enabled; useful for sudden surge events</div>
+    <div class="bg-white border border-neutral-200 rounded-2xl p-6 shadow-sm">
+
+    <div class="flex items-center gap-3 mb-5">
+        <div class="w-9 h-9 flex items-center justify-center rounded-lg bg-amber-100 text-amber-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
         </div>
-        <p class="text-xs text-neutral-500 mt-4">If multiple rules apply at once, the <span class="text-amber-400 font-bold">highest multiplier wins</span> — values are never multiplied together.</p>
+
+        <h3 class="font-bold text-neutral-900 text-sm tracking-wide">
+            How Surge Pricing Works
+        </h3>
     </div>
+
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-sm text-neutral-600">
+        <div class="flex gap-3">
+            <span class="text-neutral-400">⏱</span>
+            <p>
+                <span class="font-semibold text-neutral-800">Peak Hour</span>
+                activates during predefined high-traffic periods such as weekday rush hours.
+            </p>
+        </div>
+
+        <div class="flex gap-3">
+            <span class="text-neutral-400">📅</span>
+            <p>
+                <span class="font-semibold text-neutral-800">Festival</span>
+                applies on specific calendar dates like Diwali or New Year’s Eve.
+            </p>
+        </div>
+
+        <div class="flex gap-3">
+            <span class="text-neutral-400">📈</span>
+            <p>
+                <span class="font-semibold text-neutral-800">Demand Based</span>
+                triggers automatically when rider demand exceeds available drivers.
+            </p>
+        </div>
+
+        <div class="flex gap-3">
+            <span class="text-neutral-400">⚙</span>
+            <p>
+                <span class="font-semibold text-neutral-800">Manual Override</span>
+                allows administrators to enforce surge pricing manually during special events.
+            </p>
+        </div>
+
+    </div>
+
+    <div class="mt-6 pt-4 border-t border-neutral-100 text-xs text-neutral-500">
+        If multiple surge rules are active simultaneously, the
+        <span class="font-semibold text-neutral-800">highest multiplier is applied</span>.
+        Surge multipliers are not combined.
+    </div>
+
+</div>
 
 </div>
 @endsection

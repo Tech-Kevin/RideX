@@ -300,10 +300,10 @@
                                     <button class="text-[10px] font-bold text-amber-500 hover:text-amber-600 uppercase tracking-widest transition-colors">Details</button>
                                 </div>
                             </div>
-                        @empty
-                            <div class="col-span-full py-12 text-center">
-                                <p class="text-neutral-400 font-bold uppercase tracking-widest text-[11px]">No drivers found in the system</p>
-                            </div>
+                            @empty
+                                <div class="col-span-full py-12 text-center">
+                                    <p class="text-neutral-400 font-bold uppercase tracking-widest text-[11px]">No drivers found in the system</p>
+                                </div>
                         @endforelse
                     </div>
                 </div>

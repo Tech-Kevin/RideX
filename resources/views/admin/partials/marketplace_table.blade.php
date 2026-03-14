@@ -60,7 +60,7 @@
                     </td>
                     <td class="px-6 py-4 border-r border-neutral-100 border-dashed">
                         <div class="flex flex-col">
-                            <span class="font-black text-neutral-900">${{ $ride->estimated_fare }}</span>
+                            <span class="font-black text-neutral-900">₹ {{ $ride->estimated_fare }}</span>
                             @if($ride->surge_multiplier > 1.00)
                                 <span class="text-[10px] font-bold text-orange-600 bg-orange-100 px-1 py-0.5 rounded ml-[-2px] inline-block w-max mt-1">🔥 {{ $ride->surge_multiplier }}x Surge</span>
                             @else

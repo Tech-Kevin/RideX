@@ -45,7 +45,13 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const base = parseFloat(rates.base_fare);
         const rate = parseFloat(rates.rate_per_km);
-        return base + (distance * rate);
+        let fare = base + (distance * rate);
+        
+        if (window.surgeMultiplier && window.surgeMultiplier > 1) {
+            fare = fare * parseFloat(window.surgeMultiplier);
+        }
+        
+        return fare;
     }
 
     window.updateFareEstimation = function() {

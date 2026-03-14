@@ -152,7 +152,12 @@
                     <span class="text-neutral-900 font-bold">{{ $ride->distance_km }} km</span>
                 </div>
                 <div class="flex justify-between items-center p-4">
-                    <span class="text-neutral-500 font-black tracking-widest uppercase text-[10px]">Expected Payout</span>
+                    <div>
+                        <span class="text-neutral-500 font-black tracking-widest uppercase text-[10px] block">Expected Payout</span>
+                        @if(isset($ride->surge_multiplier) && $ride->surge_multiplier > 1)
+                        <span class="text-[10px] font-black text-orange-500 mt-1 inline-block">🔥 {{ rtrim(rtrim(number_format($ride->surge_multiplier, 2), '0'), '.') }}x surge applied</span>
+                        @endif
+                    </div>
                     <span class="text-emerald-600 font-black font-heading text-3xl tracking-tighter">{{ formatCurrency((float) $ride->estimated_fare) }}</span>
                 </div>
             </div>

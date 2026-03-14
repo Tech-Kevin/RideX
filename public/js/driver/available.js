@@ -84,6 +84,10 @@ document.addEventListener('DOMContentLoaded', function () {
         // CSRF Token for the form
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
+        const surgeMultiplierHTML = ride.surge_multiplier > 1 
+            ? `<p class="text-[10px] font-black text-orange-500 mt-1">🔥 ${parseFloat(ride.surge_multiplier).toFixed(2).replace(/\.00$/, '')}x surge</p>`
+            : '';
+
         const newCard = document.createElement('div');
         // Add highlighted "New" styling
         newCard.className = 'bg-emerald-50 border-2 border-emerald-400 rounded-3xl p-6 shadow-xl relative overflow-hidden flex flex-col group transform transition-all duration-1000 animate-[fade-in-down_0.5s_ease-out]';
@@ -103,6 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="text-right">
                     <p class="text-[10px] font-black tracking-widest uppercase text-emerald-700 mb-0.5">Estimated Payout</p>
                     <p class="text-2xl font-black font-heading text-emerald-950 tracking-tighter">${formatPrice}</p>
+                    ${surgeMultiplierHTML}
                 </div>
             </div>
 
