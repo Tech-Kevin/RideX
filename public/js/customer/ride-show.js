@@ -284,5 +284,3 @@ document.addEventListener('DOMContentLoaded', async function () {
         statusPollInterval = setInterval(pollRideStatus, 5000);
     }
 });
-
-
