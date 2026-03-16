@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Customer;
 
+use App\Enums\DriverStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Customer\StoreRideRequest;
 use App\Models\Ride;
+use App\Models\VehicleRate;
 use App\Services\RideService;
 use App\Models\User;
 use App\Enums\RideStatus;
+use App\Services\SurgePricingService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -27,14 +30,14 @@ class CustomerRideController extends Controller
         return view('customer.rides.index', compact('rides'));
     }
 
-    public function create(\App\Services\SurgePricingService $surgeService): View
+    public function create(SurgePricingService $surgeService): View
     {
         $this->ensureCustomer();
 
-        $rates = \App\Models\VehicleRate::all()->keyBy('vehicle_type');
+        $rates = VehicleRate::all()->keyBy('vehicle_type');
 
         $availableDrivers = User::where('role', 'driver')
-            ->where('driver_status', \App\Enums\DriverStatus::ONLINE_AVAILABLE->value)
+            ->where('driver_status', DriverStatus::ONLINE_AVAILABLE->value)
             ->count();
         $activeRiders = Ride::whereIn('status', [RideStatus::PENDING->value])->count();
         $surge = $surgeService->getActiveMultiplier($availableDrivers, $activeRiders);

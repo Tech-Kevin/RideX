@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\SurgeRuleController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Customer\CustomerRideController;
 use App\Http\Controllers\Driver\DriverLocationController;
 use App\Http\Controllers\Driver\DriverRideController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -42,28 +45,28 @@ Route::middleware('auth')->group(function () {
 
         // Admin Routes
         Route::prefix('admin')->name('admin.')->middleware('admin')->group(function () {
-            Route::get('/dashboard', [\App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
-            Route::get('/users', [\App\Http\Controllers\Admin\AdminController::class, 'users'])->name('users');
-            Route::post('/users/{user}/toggle-status', [\App\Http\Controllers\Admin\AdminController::class, 'toggleStatus'])->name('users.toggle-status');
-            Route::get('/rides', [\App\Http\Controllers\Admin\AdminController::class, 'rides'])->name('rides');
-            Route::get('/rates', [\App\Http\Controllers\Admin\AdminController::class, 'vehicleRates'])->name('rates');
-            Route::patch('/rates/{rate}', [\App\Http\Controllers\Admin\AdminController::class, 'updateVehicleRate'])->name('rates.update');
+            Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+            Route::get('/users', [AdminController::class, 'users'])->name('users');
+            Route::post('/users/{user}/toggle-status', [AdminController::class, 'toggleStatus'])->name('users.toggle-status');
+            Route::get('/rides', [AdminController::class, 'rides'])->name('rides');
+            Route::get('/rates', [AdminController::class, 'vehicleRates'])->name('rates');
+            Route::patch('/rates/{rate}', [AdminController::class, 'updateVehicleRate'])->name('rates.update');
 
             // Verification Routes
-            Route::get('/verifications', [\App\Http\Controllers\Admin\AdminController::class, 'verifications'])->name('verifications');
-            Route::post('/users/{user}/verify', [\App\Http\Controllers\Admin\AdminController::class, 'verifyUser'])->name('users.verify');
+            Route::get('/verifications', [AdminController::class, 'verifications'])->name('verifications');
+            Route::post('/users/{user}/verify', [AdminController::class, 'verifyUser'])->name('users.verify');
 
             // Operations Panel
-            Route::get('/operations', [\App\Http\Controllers\Admin\AdminController::class, 'operations'])->name('operations');
-            Route::get('/operations/metrics', [\App\Http\Controllers\Admin\AdminController::class, 'operationsMetrics'])->name('operations.metrics');
-            Route::get('/operations/marketplace-table', [\App\Http\Controllers\Admin\AdminController::class, 'marketplaceTable'])->name('operations.marketplace-table');
+            Route::get('/operations', [AdminController::class, 'operations'])->name('operations');
+            Route::get('/operations/metrics', [AdminController::class, 'operationsMetrics'])->name('operations.metrics');
+            Route::get('/operations/marketplace-table', [AdminController::class, 'marketplaceTable'])->name('operations.marketplace-table');
 
             // Surge Rules (Micro Settings)
-            Route::get('/surge-rules', [\App\Http\Controllers\Admin\SurgeRuleController::class, 'index'])->name('surge-rules.index');
-            Route::post('/surge-rules', [\App\Http\Controllers\Admin\SurgeRuleController::class, 'store'])->name('surge-rules.store');
-            Route::put('/surge-rules/{surgeRule}', [\App\Http\Controllers\Admin\SurgeRuleController::class, 'update'])->name('surge-rules.update');
-            Route::post('/surge-rules/{surgeRule}/toggle', [\App\Http\Controllers\Admin\SurgeRuleController::class, 'toggleActive'])->name('surge-rules.toggle');
-            Route::delete('/surge-rules/{surgeRule}', [\App\Http\Controllers\Admin\SurgeRuleController::class, 'destroy'])->name('surge-rules.destroy');
+            Route::get('/surge-rules', [SurgeRuleController::class, 'index'])->name('surge-rules.index');
+            Route::post('/surge-rules', [SurgeRuleController::class, 'store'])->name('surge-rules.store');
+            Route::put('/surge-rules/{surgeRule}', [SurgeRuleController::class, 'update'])->name('surge-rules.update');
+            Route::post('/surge-rules/{surgeRule}/toggle', [SurgeRuleController::class, 'toggleActive'])->name('surge-rules.toggle');
+            Route::delete('/surge-rules/{surgeRule}', [SurgeRuleController::class, 'destroy'])->name('surge-rules.destroy');
         });
 
         Route::prefix('customer')->name('customer.')->group(function () {
@@ -91,7 +94,7 @@ Route::middleware('auth')->group(function () {
         });
 
         // Universal Profile Routes
-        Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'index'])->name('profile');
-        Route::post('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+        Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
+        Route::post('/profile', [ProfileController::class, 'update'])->name('profile.update');
     });
 });
